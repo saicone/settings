@@ -4,7 +4,7 @@ import com.saicone.settings.SettingsNode;
 import com.saicone.settings.SettingsSource;
 import com.saicone.settings.node.ListNode;
 import com.saicone.settings.node.MapNode;
-import com.saicone.settings.node.ObjectNode;
+import com.saicone.settings.node.NodeKey;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,7 +69,7 @@ public class YamlSettingsSource extends SettingsSource {
         if (node instanceof MappingNode) {
             return readMapNode(new MapNode(parent, key), (MappingNode) node);
         } else if (node instanceof SequenceNode) {
-            final ListNode list = new ListNode(parent, key, new ArrayList<>());
+            final ListNode list = new ListNode(parent, key);
             if (((SequenceNode) node).getValue().isEmpty()) {
                 return list;
             }
@@ -81,7 +81,7 @@ public class YamlSettingsSource extends SettingsSource {
             }
             return list;
         } else {
-            return new ObjectNode(parent, key, yaml.getConstructor().constructObject(node));
+            return NodeKey.of(parent, key, yaml.getConstructor().constructObject(node));
         }
     }
 

@@ -1,0 +1,15 @@
+dependencies {
+    //api 'org.tomlj:tomlj:1.1.0'
+    api 'com.electronwill.night-config:toml:3.6.0'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId project.group
+            artifactId project.name
+            version project.version
+            from components.java
+        }
+    }
+}
