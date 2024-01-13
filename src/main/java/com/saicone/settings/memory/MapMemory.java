@@ -38,7 +38,9 @@ public class MapMemory implements SettingsMemory {
     @Override
     @SuppressWarnings("all")
     public void remove(@NotNull SettingsNode node) {
-        while (map.values().remove(node));
+        while (map.values().remove(node)) {
+            /** intentionally empty */
+        }
     }
 
     @Override
