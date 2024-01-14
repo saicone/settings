@@ -6,10 +6,8 @@ import com.saicone.settings.type.Types;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class NodeValue<V> implements SettingsNode {
 
@@ -110,6 +108,124 @@ public abstract class NodeValue<V> implements SettingsNode {
     @Override
     public SettingsNode setSideComment(@Nullable List<String> sideComment) {
         this.sideComment = sideComment;
+        return this;
+    }
+
+    @Override
+    public @NotNull SettingsNode replaceArgs(@Nullable Object... args) {
+        if (!(getValue() instanceof String)) {
+            return this;
+        }
+        final String s = (String) getValue();
+        if (s.trim().isEmpty()) {
+            return this;
+        } else if (args.length < 1) {
+            setValue(s.replace("{#}", "0").replace("{*}", "[]").replace("{-}", ""));
+            return this;
+        }
+        final char[] chars = s.toCharArray();
+        final StringBuilder builder = new StringBuilder(s.length());
+
+        String all = null;
+        for (int i = 0; i < chars.length; i++) {
+            final int mark = i;
+            if (chars[i] == '{') {
+                int num = 0;
+                while (i + 1 < chars.length) {
+                    if (Character.isDigit(chars[i + 1])) {
+                        i++;
+                        num *= 10;
+                        num += chars[i] - '0';
+                        continue;
+                    }
+                    if (i == mark) {
+                        final char c = chars[i + 1];
+                        if (c == '#') {
+                            i++;
+                            num = -1;
+                        } else if (c == '*') {
+                            i++;
+                            num = -2;
+                        } else if (c == '-') {
+                            i++;
+                            num = -3;
+                        }
+                    }
+                    break;
+                }
+                if (i != mark && i + 1 < chars.length && chars[i + 1] == '}') {
+                    i++;
+                    if (num == -1) {
+                        builder.append(args.length);
+                    } else if (num == -2) {
+                        builder.append(Arrays.toString(args));
+                    } else if (num == -3) {
+                        if (all == null) {
+                            all = Arrays.stream(args).map(String::valueOf).collect(Collectors.joining(" "));
+                        }
+                        builder.append(all);
+                    } else if (num < args.length) { // Avoid IndexOutOfBoundsException
+                        builder.append(args[num]);
+                    } else {
+                        builder.append('{').append(num).append('}');
+                    }
+                } else {
+                    i = mark;
+                }
+            }
+            if (mark == i) {
+                builder.append(chars[i]);
+            }
+        }
+
+        setValue(builder.toString());
+        return this;
+    }
+
+    @Override
+    public @NotNull SettingsNode replaceArgs(@NotNull Map<String, Object> args) {
+        if (!(getValue() instanceof String)) {
+            return this;
+        }
+        final String s = (String) getValue();
+        if (s.trim().isEmpty() || args.isEmpty()) {
+            return this;
+        }
+        final char[] chars = s.toCharArray();
+        final StringBuilder builder = new StringBuilder(s.length());
+
+        int mark = 0;
+        for (int i = 0; i < chars.length; i++) {
+            final char c = chars[i];
+
+            builder.append(c);
+            if (c != '{' || i + 1 >= chars.length) {
+                mark++;
+                continue;
+            }
+
+            final int mark1 = i + 1;
+            while (++i < chars.length) {
+                final char c1 = chars[i];
+                if (c1 == '}') {
+                    if (i > mark1) {
+                        builder.replace(mark, i, s.substring(mark1, i));
+                    } else {
+                        builder.append(c1);
+                    }
+                    break;
+                } else {
+                    builder.append(c1);
+                    if (i + 1 < chars.length && chars[i + 1] == '{') {
+                        break;
+                    }
+                }
+            }
+
+            mark = builder.length();
+        }
+
+        setValue(builder.toString());
         return this;
     }
 

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SettingsNode extends ValueType<Object> {
 
@@ -109,6 +110,12 @@ public interface SettingsNode extends ValueType<Object> {
         }
         return this;
     }
+
+    @NotNull
+    SettingsNode replaceArgs(@Nullable Object... args);
+
+    @NotNull
+    SettingsNode replaceArgs(@NotNull Map<String, Object> args);
 
     default void delete() {
         delete(true);

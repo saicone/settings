@@ -57,6 +57,22 @@ public class ListNode extends NodeKey<List<SettingsNode>> implements List<Settin
         return this;
     }
 
+    @Override
+    public @NotNull SettingsNode replaceArgs(@Nullable Object... args) {
+        for (SettingsNode node : getValue()) {
+            node.replaceArgs(args);
+        }
+        return this;
+    }
+
+    @Override
+    public @NotNull SettingsNode replaceArgs(@NotNull Map<String, Object> args) {
+        for (SettingsNode node : getValue()) {
+            node.replaceArgs(args);
+        }
+        return this;
+    }
+
     // Default map implementation
 
     @Override
