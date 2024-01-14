@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -220,17 +221,9 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
     }
 
     @Override
-    public @NotNull SettingsNode replaceArgs(@Nullable Object... args) {
+    public @NotNull SettingsNode edit(@NotNull Function<SettingsNode, SettingsNode> function) {
         for (Map.Entry<String, SettingsNode> entry : getValue().entrySet()) {
-            entry.getValue().replaceArgs(args);
-        }
-        return this;
-    }
-
-    @Override
-    public @NotNull SettingsNode replaceArgs(@NotNull Map<String, Object> args) {
-        for (Map.Entry<String, SettingsNode> entry : getValue().entrySet()) {
-            entry.getValue().replaceArgs(args);
+            entry.getValue().edit(function);
         }
         return this;
     }

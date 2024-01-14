@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class ListNode extends NodeKey<List<SettingsNode>> implements List<SettingsNode> {
 
@@ -58,17 +60,9 @@ public class ListNode extends NodeKey<List<SettingsNode>> implements List<Settin
     }
 
     @Override
-    public @NotNull SettingsNode replaceArgs(@Nullable Object... args) {
+    public @NotNull SettingsNode edit(@NotNull Function<SettingsNode, SettingsNode> function) {
         for (SettingsNode node : getValue()) {
-            node.replaceArgs(args);
-        }
-        return this;
-    }
-
-    @Override
-    public @NotNull SettingsNode replaceArgs(@NotNull Map<String, Object> args) {
-        for (SettingsNode node : getValue()) {
-            node.replaceArgs(args);
+            node.edit(function);
         }
         return this;
     }

@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public abstract class NodeValue<V> implements SettingsNode {
 
@@ -108,97 +107,6 @@ public abstract class NodeValue<V> implements SettingsNode {
     @Override
     public SettingsNode setSideComment(@Nullable List<String> sideComment) {
         this.sideComment = sideComment;
-        return this;
-    }
-
-    @Override
-    public @NotNull SettingsNode replaceArgs(@Nullable Object... args) {
-        if (!(getValue() instanceof String)) {
-            return this;
-        }
-        final String s = (String) getValue();
-        if (s.trim().isEmpty() || args.length < 1) {
-            return this;
-        }
-        final char[] chars = s.toCharArray();
-        final StringBuilder builder = new StringBuilder(s.length());
-
-        for (int i = 0; i < chars.length; i++) {
-            final int mark = i;
-            if (chars[i] == '{') {
-                int num = 0;
-                while (i + 1 < chars.length) {
-                    if (!Character.isDigit(chars[i + 1])) {
-                        break;
-                    }
-                    i++;
-                    num *= 10;
-                    num += chars[i] - '0';
-                }
-                if (i != mark && i + 1 < chars.length && chars[i + 1] == '}') {
-                    i++;
-                    if (num < args.length) { // Avoid IndexOutOfBoundsException
-                        builder.append(args[num]);
-                    } else {
-                        builder.append('{').append(num).append('}');
-                    }
-                } else {
-                    i = mark;
-                }
-            }
-            if (mark == i) {
-                builder.append(chars[i]);
-            }
-        }
-
-        setValue(builder.toString());
-        return this;
-    }
-
-    @Override
-    public @NotNull SettingsNode replaceArgs(@NotNull Map<String, Object> args) {
-        if (!(getValue() instanceof String)) {
-            return this;
-        }
-        final String s = (String) getValue();
-        if (s.trim().isEmpty() || args.isEmpty()) {
-            return this;
-        }
-        final char[] chars = s.toCharArray();
-        final StringBuilder builder = new StringBuilder(s.length());
-
-        int mark = 0;
-        for (int i = 0; i < chars.length; i++) {
-            final char c = chars[i];
-
-            builder.append(c);
-            if (c != '{' || i + 1 >= chars.length) {
-                mark++;
-                continue;
-            }
-
-            final int mark1 = i + 1;
-            while (++i < chars.length) {
-                final char c1 = chars[i];
-                if (c1 == '}') {
-                    if (i > mark1) {
-                        builder.replace(mark, i, s.substring(mark1, i));
-                    } else {
-                        builder.append(c1);
-                    }
-                    break;
-                } else {
-                    builder.append(c1);
-                    if (i + 1 < chars.length && chars[i + 1] == '{') {
-                        break;
-                    }
-                }
-            }
-
-            mark = builder.length();
-        }
-
-        setValue(builder.toString());
         return this;
     }
 

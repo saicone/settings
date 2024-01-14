@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public interface SettingsNode extends ValueType<Object> {
 
@@ -112,10 +114,118 @@ public interface SettingsNode extends ValueType<Object> {
     }
 
     @NotNull
-    SettingsNode replaceArgs(@Nullable Object... args);
+    default SettingsNode edit(@NotNull Consumer<SettingsNode> consumer) {
+        return edit(node -> {
+            consumer.accept(node);
+            return node;
+        });
+    }
 
     @NotNull
-    SettingsNode replaceArgs(@NotNull Map<String, Object> args);
+    default SettingsNode edit(@NotNull Function<SettingsNode, SettingsNode> function) {
+        return function.apply(this);
+    }
+
+    @NotNull
+    default SettingsNode replaceArgs(@Nullable Object... args) {
+        if (args.length < 1) {
+            return this;
+        }
+        return edit(node -> {
+            if (!(node.getValue() instanceof String)) {
+                return node;
+            }
+
+            final String s = (String) node.getValue();
+            if (s.trim().isEmpty()) {
+                return this;
+            }
+            final char[] chars = s.toCharArray();
+            final StringBuilder builder = new StringBuilder(s.length());
+
+            for (int i = 0; i < chars.length; i++) {
+                final int mark = i;
+                if (chars[i] == '{') {
+                    int num = 0;
+                    while (i + 1 < chars.length) {
+                        if (!Character.isDigit(chars[i + 1])) {
+                            break;
+                        }
+                        i++;
+                        num *= 10;
+                        num += chars[i] - '0';
+                    }
+                    if (i != mark && i + 1 < chars.length && chars[i + 1] == '}') {
+                        i++;
+                        if (num < args.length) { // Avoid IndexOutOfBoundsException
+                            builder.append(args[num]);
+                        } else {
+                            builder.append('{').append(num).append('}');
+                        }
+                    } else {
+                        i = mark;
+                    }
+                }
+                if (mark == i) {
+                    builder.append(chars[i]);
+                }
+            }
+
+            return node.setValue(builder.toString());
+        });
+    }
+
+    @NotNull
+    default SettingsNode replaceArgs(@NotNull Map<String, Object> args) {
+        if (args.isEmpty()) {
+            return this;
+        }
+        return edit(node -> {
+            if (!(node.getValue() instanceof String)) {
+                return node;
+            }
+
+            final String s = (String) node.getValue();
+            if (s.trim().isEmpty()) {
+                return this;
+            }
+            final char[] chars = s.toCharArray();
+            final StringBuilder builder = new StringBuilder(s.length());
+
+            int mark = 0;
+            for (int i = 0; i < chars.length; i++) {
+                final char c = chars[i];
+
+                builder.append(c);
+                if (c != '{' || i + 1 >= chars.length) {
+                    mark++;
+                    continue;
+                }
+
+                final int mark1 = i + 1;
+                while (++i < chars.length) {
+                    final char c1 = chars[i];
+                    if (c1 == '}') {
+                        if (i > mark1) {
+                            builder.replace(mark, i, s.substring(mark1, i));
+                        } else {
+                            builder.append(c1);
+                        }
+                        break;
+                    } else {
+                        builder.append(c1);
+                        if (i + 1 < chars.length && chars[i + 1] == '{') {
+                            break;
+                        }
+                    }
+                }
+
+                mark = builder.length();
+            }
+
+            return node.setValue(builder.toString());
+        });
+    }
 
     default void delete() {
         delete(true);
