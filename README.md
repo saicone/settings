@@ -35,7 +35,7 @@ Settings library handle multiple data formats as configuration in a flexible way
 
 Currently supporting the formats:
 
-* [HOCON](https://github.com/lightbend/config/blob/master/HOCON.md)
+* [HOCON](https://github.com/lightbend/config/blob/main/HOCON.md)
 * [JSON](https://www.json.org/) (with [Gson](https://github.com/google/gson))
 * [TOML](https://toml.io/en/v1.0.0)
 * [YAML](http://yaml.org/spec/1.1/current.html)

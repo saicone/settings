@@ -84,7 +84,11 @@ public abstract class NodeValue<V> implements SettingsNode {
     @NotNull
     @Override
     public SettingsNode setValue(@NotNull Object value) {
-        this.faceValue = value;
+        if (this.sourceValue == null) {
+            this.sourceValue = value;
+        } else {
+            this.faceValue = value;
+        }
         return this;
     }
 
