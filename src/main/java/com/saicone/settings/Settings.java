@@ -16,35 +16,20 @@ public class Settings extends MapNode {
     private SettingsMemory memory;
 
     public Settings() {
-        this(null, "@root", new LinkedHashMap<>());
-    }
-
-    public Settings(@Nullable Settings parent) {
-        this(parent, "@root", new LinkedHashMap<>());
+        this(new LinkedHashMap<>());
     }
 
     public Settings(@NotNull Map<String, SettingsNode> nodes) {
-        this(null, "@root", nodes);
+        super(null, null, nodes);
     }
 
-    public Settings(@NotNull String key) {
-        this(null, key, new LinkedHashMap<>());
+    public Settings(@Nullable SettingsMemory memory) {
+        this(new LinkedHashMap<>(), memory);
     }
 
-    public Settings(@NotNull String key, @NotNull Map<String, SettingsNode> nodes) {
-        this(null, key, nodes);
-    }
-
-    public Settings(@Nullable Settings parent, @NotNull String key) {
-        super(parent, key, new LinkedHashMap<>());
-    }
-
-    public Settings(@Nullable Settings parent, @NotNull Map<String, SettingsNode> nodes) {
-        this(parent, "@root", nodes);
-    }
-
-    public Settings(@Nullable Settings parent, @NotNull String key, @NotNull Map<String, SettingsNode> nodes) {
-        super(parent, key, nodes);
+    public Settings(@NotNull Map<String, SettingsNode> nodes, @Nullable SettingsMemory memory) {
+        super(null, null, nodes);
+        this.memory = memory;
     }
 
     public boolean isMemorizing() {
