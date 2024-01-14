@@ -206,8 +206,9 @@ public interface SettingsNode extends ValueType<Object> {
                 while (++i < chars.length) {
                     final char c1 = chars[i];
                     if (c1 == '}') {
-                        if (i > mark1) {
-                            builder.replace(mark, i, s.substring(mark1, i));
+                        final Object arg;
+                        if (i > mark1 && (arg = args.get(s.substring(mark1, i))) != null) {
+                            builder.replace(mark, i, String.valueOf(arg));
                         } else {
                             builder.append(c1);
                         }
