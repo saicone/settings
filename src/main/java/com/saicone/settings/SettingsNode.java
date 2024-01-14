@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public interface SettingsNode extends ValueType<Object> {
 
@@ -124,6 +125,25 @@ public interface SettingsNode extends ValueType<Object> {
     @NotNull
     default SettingsNode edit(@NotNull Function<SettingsNode, SettingsNode> function) {
         return function.apply(this);
+    }
+
+    @NotNull
+    default SettingsNode parse(@NotNull Function<String, String> function) {
+        return parse(null, function);
+    }
+
+    @NotNull
+    default SettingsNode parse(@Nullable Predicate<String> predicate, @NotNull Function<String, String> function) {
+        return edit(node -> {
+            if (!(node.getValue() instanceof String)) {
+                return node;
+            }
+            final String s = (String) node.getValue();
+            if (predicate != null && !predicate.test(s)) {
+                return node;
+            }
+            return node.setValue(function.apply(s));
+        });
     }
 
     @NotNull
