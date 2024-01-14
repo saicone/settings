@@ -117,54 +117,27 @@ public abstract class NodeValue<V> implements SettingsNode {
             return this;
         }
         final String s = (String) getValue();
-        if (s.trim().isEmpty()) {
-            return this;
-        } else if (args.length < 1) {
-            setValue(s.replace("{#}", "0").replace("{*}", "[]").replace("{-}", ""));
+        if (s.trim().isEmpty() || args.length < 1) {
             return this;
         }
         final char[] chars = s.toCharArray();
         final StringBuilder builder = new StringBuilder(s.length());
 
-        String all = null;
         for (int i = 0; i < chars.length; i++) {
             final int mark = i;
             if (chars[i] == '{') {
                 int num = 0;
                 while (i + 1 < chars.length) {
-                    if (Character.isDigit(chars[i + 1])) {
-                        i++;
-                        num *= 10;
-                        num += chars[i] - '0';
-                        continue;
+                    if (!Character.isDigit(chars[i + 1])) {
+                        break;
                     }
-                    if (i == mark) {
-                        final char c = chars[i + 1];
-                        if (c == '#') {
-                            i++;
-                            num = -1;
-                        } else if (c == '*') {
-                            i++;
-                            num = -2;
-                        } else if (c == '-') {
-                            i++;
-                            num = -3;
-                        }
-                    }
-                    break;
+                    i++;
+                    num *= 10;
+                    num += chars[i] - '0';
                 }
                 if (i != mark && i + 1 < chars.length && chars[i + 1] == '}') {
                     i++;
-                    if (num == -1) {
-                        builder.append(args.length);
-                    } else if (num == -2) {
-                        builder.append(Arrays.toString(args));
-                    } else if (num == -3) {
-                        if (all == null) {
-                            all = Arrays.stream(args).map(String::valueOf).collect(Collectors.joining(" "));
-                        }
-                        builder.append(all);
-                    } else if (num < args.length) { // Avoid IndexOutOfBoundsException
+                    if (num < args.length) { // Avoid IndexOutOfBoundsException
                         builder.append(args[num]);
                     } else {
                         builder.append('{').append(num).append('}');
