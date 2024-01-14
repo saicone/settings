@@ -40,6 +40,16 @@ public interface SettingsNode extends ValueType<Object> {
     List<String> getSideComment();
 
     @NotNull
+    default SettingsNode getRoot() {
+        SettingsNode node = this;
+        MapNode map;
+        while ((map = node.getParent()) != null) {
+            node = map;
+        }
+        return node;
+    }
+
+    @NotNull
     SettingsNode setParent(@Nullable MapNode parent);
 
     @NotNull

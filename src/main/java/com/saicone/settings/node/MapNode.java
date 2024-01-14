@@ -133,34 +133,30 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return null;
     }
 
+    @Override
+    public @NotNull MapNode getRoot() {
+        return (MapNode) super.getRoot();
+    }
+
     public void set(@NotNull SettingsNode node, @NotNull String... path) {
-        MapNode parent = getParent();
-        if (parent == null) {
-            MapNode mapNode = this;
-            final int size = path.length - 1;
-            for (int i = 0; i < size; i++) {
-                final String key = path[i];
-                final SettingsNode child = getValue().get(key);
-                if (child == null) {
-                    mapNode = new MapNode(this, key);
-                    put(key, mapNode);
-                } else if (child.isMap()) {
-                    mapNode = child.asMapNode();
-                } else {
-                    mapNode = new MapNode(this, key);
-                    put(key, mapNode.setTopComment(child.getTopComment()).setSideComment(child.getSideComment()));
-                }
+        MapNode mapNode = getRoot();
+        final int size = path.length - 1;
+        for (int i = 0; i < size; i++) {
+            final String key = path[i];
+            final SettingsNode child = mapNode.getValue().get(key);
+            if (child == null) {
+                mapNode = new MapNode(this, key);
+                put(key, mapNode);
+            } else if (child.isMap()) {
+                mapNode = child.asMapNode();
+            } else {
+                mapNode = new MapNode(this, key);
+                put(key, mapNode.mergeComment(child));
             }
-            final String key = path[path.length - 1];
-            node.setKey(key);
-            mapNode.put(key, node);
-        } else {
-            MapNode map;
-            while ((map = parent.getParent()) != null) {
-                parent = map;
-            }
-            parent.set(node, path);
         }
+        final String key = path[path.length - 1];
+        node.setKey(key);
+        mapNode.put(key, node);
     }
 
     @Override
