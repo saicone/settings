@@ -3,6 +3,7 @@ package com.saicone.settings;
 import com.saicone.settings.node.ListNode;
 import com.saicone.settings.node.MapNode;
 import com.saicone.settings.type.ValueType;
+import com.saicone.settings.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -157,8 +158,8 @@ public interface SettingsNode extends ValueType<Object> {
             }
 
             final String s = (String) node.getValue();
-            if (s.length() < 3) {
-                return this;
+            if (s.length() < 3 || s.indexOf('{') < 0) {
+                return node;
             }
 
             final char[] chars = s.toCharArray();
@@ -178,37 +179,7 @@ public interface SettingsNode extends ValueType<Object> {
                 }
             }
 
-            final StringBuilder builder = new StringBuilder(s.length());
-
-            for (int i = 0; i < chars.length; i++) {
-                final int mark = i;
-                if (chars[i] == '{') {
-                    int num = 0;
-                    while (i + 1 < chars.length) {
-                        if (!Character.isDigit(chars[i + 1])) {
-                            break;
-                        }
-                        i++;
-                        num *= 10;
-                        num += chars[i] - '0';
-                    }
-                    if (i != mark && i + 1 < chars.length && chars[i + 1] == '}') {
-                        i++;
-                        if (num < args.length) { // Avoid IndexOutOfBoundsException
-                            builder.append(args[num]);
-                        } else {
-                            builder.append('{').append(num).append('}');
-                        }
-                    } else {
-                        i = mark;
-                    }
-                }
-                if (mark == i) {
-                    builder.append(chars[i]);
-                }
-            }
-
-            return node.setValue(builder.toString());
+            return node.setValue(Strings.replaceArgs(chars, args));
         });
     }
 
@@ -223,7 +194,7 @@ public interface SettingsNode extends ValueType<Object> {
             }
 
             final String s = (String) node.getValue();
-            if (s.length() < 3) {
+            if (s.length() < 3 || s.indexOf('{') < 0) {
                 return this;
             }
             final char[] chars = s.toCharArray();
@@ -233,41 +204,8 @@ public interface SettingsNode extends ValueType<Object> {
                     return node.setValue(arg);
                 }
             }
-            final StringBuilder builder = new StringBuilder(s.length());
 
-            int mark = 0;
-            for (int i = 0; i < chars.length; i++) {
-                final char c = chars[i];
-
-                builder.append(c);
-                if (c != '{' || i + 1 >= chars.length) {
-                    mark++;
-                    continue;
-                }
-
-                final int mark1 = i + 1;
-                while (++i < chars.length) {
-                    final char c1 = chars[i];
-                    if (c1 == '}') {
-                        final Object arg;
-                        if (i > mark1 && (arg = args.get(s.substring(mark1, i))) != null) {
-                            builder.replace(mark, i, String.valueOf(arg));
-                        } else {
-                            builder.append(c1);
-                        }
-                        break;
-                    } else {
-                        builder.append(c1);
-                        if (i + 1 < chars.length && chars[i + 1] == '{') {
-                            break;
-                        }
-                    }
-                }
-
-                mark = builder.length();
-            }
-
-            return node.setValue(builder.toString());
+            return node.setValue(Strings.replaceArgs(s, chars, args));
         });
     }
 

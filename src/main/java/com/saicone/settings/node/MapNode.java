@@ -3,6 +3,7 @@ package com.saicone.settings.node;
 import com.saicone.settings.SettingsNode;
 import com.saicone.settings.type.IterableType;
 import com.saicone.settings.type.ValueType;
+import com.saicone.settings.util.Strings;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,6 +44,9 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
 
     @NotNull
     public SettingsNode get(@NotNull String... path) {
+        if (path.length == 1) {
+            return get(path[0]);
+        }
         return getIf(String::equals, path);
     }
 
@@ -53,6 +57,9 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
 
     @NotNull
     public SettingsNode getIgnoreCase(@NotNull String... path) {
+        if (path.length == 1) {
+            return getIgnoreCase(path[0]);
+        }
         return getIf(String::equalsIgnoreCase, path);
     }
 
@@ -64,27 +71,15 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
 
     @NotNull
     public SettingsNode getRegex(@NotNull @Language(value = "RegExp") String... regexPath) {
+        if (regexPath.length == 1) {
+            return getRegex(regexPath[0]);
+        }
         return getIf(Pattern::compile, (s, pattern) -> pattern.matcher(s).matches(), regexPath);
     }
 
     @NotNull
     public SettingsNode getSplit(@NotNull Object path) {
-        final String s = String.valueOf(path);
-        int end = s.indexOf('.');
-        if (end < 1) {
-            return get(s);
-        }
-        int start = 0;
-        final List<String> list = new ArrayList<>();
-        while (end > 0) {
-            if (s.charAt(end - 1) != '\\') {
-                list.add(s.substring(start, end).replace("\\.", "."));
-                start = end + 1;
-            }
-            end = s.indexOf('.', end + 1);
-        }
-        list.add(s.substring(start));
-        return get(list.toArray(new String[0]));
+        return get(Strings.split(String.valueOf(path), '.'));
     }
 
     @NotNull
