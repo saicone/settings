@@ -196,10 +196,9 @@ public class SettingsLoader {
     @Contract("!null, _, _ -> !null")
     public <T extends MapNode> T set(@Nullable T node, @NotNull Object value, @NotNull String path) {
         if (node == null) {
-
             return null;
         }
-
-
+        parse(node, node.getSplit(path).setValue(value));
+        return node;
     }
 }
