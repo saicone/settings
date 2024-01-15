@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class Expressions {
 
-    public static final ExpressionParser NODE = (root, provider, args) -> root.getSplit(args[0]).getValue();
+    public static final ExpressionParser NODE = (root, provider, args) -> root.getSplit(args[0]);
     public static final ExpressionParser SIZE = (root, provider, args) -> {
         final SettingsNode node = (SettingsNode) args[0];
         return node.isMap() ? node.asMapNode().size() : node.isList() ? node.asListNode().size() : node.getValue() == null ? -1 : 1;

@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -129,12 +130,12 @@ public interface SettingsNode extends ValueType<Object> {
     }
 
     @NotNull
-    default SettingsNode parse(@NotNull Function<String, String> function) {
+    default SettingsNode parse(@NotNull BiFunction<SettingsNode, String, Object> function) {
         return parse(null, function);
     }
 
     @NotNull
-    default SettingsNode parse(@Nullable Predicate<String> predicate, @NotNull Function<String, String> function) {
+    default SettingsNode parse(@Nullable Predicate<String> predicate, @NotNull BiFunction<SettingsNode, String, Object> function) {
         return edit(node -> {
             if (!(node.getValue() instanceof String)) {
                 return node;
@@ -143,7 +144,7 @@ public interface SettingsNode extends ValueType<Object> {
             if (predicate != null && !predicate.test(s)) {
                 return node;
             }
-            return node.setValue(function.apply(s));
+            return node.setValue(function.apply(node, s));
         });
     }
 
