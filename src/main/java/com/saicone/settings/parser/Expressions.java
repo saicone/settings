@@ -1,18 +1,26 @@
 package com.saicone.settings.parser;
 
 import com.saicone.settings.SettingsNode;
+import com.saicone.settings.node.NodeValue;
 import com.saicone.settings.parser.impl.MathExpression;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Expressions {
 
-    public static final ExpressionParser NODE = (root, provider, args) -> root.getSplit(args[0]);
+    public static final ExpressionParser NODE = (root, provider, args) -> {
+        final SettingsNode node = root.getSplit(args[0]);
+        if (args.length == 1) {
+            return node;
+        }
+        return NodeValue.of(node.getValue()).replaceArgs(Arrays.copyOfRange(args, 1, args.length));
+    };
     public static final ExpressionParser SIZE = (root, provider, args) -> {
-        final SettingsNode node = (SettingsNode) args[0];
+        final SettingsNode node = root.getSplit(args[0]);
         return node.isMap() ? node.asMapNode().size() : node.isList() ? node.asListNode().size() : node.getValue() == null ? -1 : 1;
     };
     public static final ExpressionParser JOIN = (root, provider, args) -> {

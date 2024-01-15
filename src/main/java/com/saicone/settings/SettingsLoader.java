@@ -186,6 +186,7 @@ public class SettingsLoader {
         return expression.parse(root, provider, args);
     }
 
+    @NotNull
     public <T extends MapNode> T load(@NotNull SettingsSource source, @NotNull Reader reader, @NotNull T parent) throws IOException {
         final T node = source.read(reader, parent);
         parse(source.read(reader, parent));
