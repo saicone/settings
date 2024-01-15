@@ -39,11 +39,6 @@ public class NodeKey<V> extends NodeValue<V> {
     }
 
     @Override
-    public boolean isRoot() {
-        return this.parent == null;
-    }
-
-    @Override
     public @Nullable MapNode getParent() {
         return parent;
     }

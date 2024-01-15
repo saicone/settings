@@ -24,7 +24,13 @@ public interface SettingsNode extends ValueType<Object> {
         return false;
     }
 
-    boolean isRoot();
+    default boolean isRoot() {
+        return getParent() == null;
+    }
+
+    default boolean isReal() {
+        return getKey() != null || getValue() != null;
+    }
 
     boolean hasTopComment();
 

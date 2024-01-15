@@ -19,7 +19,7 @@
         <img src="https://img.shields.io/badge/JavaDoc-Online-green?style=flat-square"/>
     </a>
     <a href="https://docs.saicone.com/settings/">
-        <img src="https://img.shields.io/badge/Saicone-settings%20Wiki-3b3bb0?logo=github&logoColor=white&style=flat-square"/>
+        <img src="https://img.shields.io/badge/Saicone-Settings%20Wiki-3b3bb0?logo=github&logoColor=white&style=flat-square"/>
     </a>
 </p>
 

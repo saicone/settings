@@ -64,13 +64,13 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
     }
 
     @NotNull
-    public SettingsNode getRegex(@NotNull @Language(value = "RegExp") String regex) {
+    public SettingsNode getRegex(@NotNull @Language("RegExp") String regex) {
         final Pattern pattern = Pattern.compile(regex);
         return getIf(s -> pattern.matcher(s).matches(), null);
     }
 
     @NotNull
-    public SettingsNode getRegex(@NotNull @Language(value = "RegExp") String... regexPath) {
+    public SettingsNode getRegex(@NotNull @Language("RegExp") String... regexPath) {
         if (regexPath.length == 1) {
             return getRegex(regexPath[0]);
         }
