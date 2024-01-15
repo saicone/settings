@@ -157,10 +157,27 @@ public interface SettingsNode extends ValueType<Object> {
             }
 
             final String s = (String) node.getValue();
-            if (s.trim().isEmpty()) {
+            if (s.length() < 3) {
                 return this;
             }
+
             final char[] chars = s.toCharArray();
+            if (chars[0] == '{' && chars[chars.length - 1] == '}') {
+                int i = 1;
+                int num = 0;
+                while (i + 1 < chars.length) {
+                    if (!Character.isDigit(chars[i + 1])) {
+                        break;
+                    }
+                    i++;
+                    num *= 10;
+                    num += chars[i] - '0';
+                }
+                if (chars[i + 1] == '}') {
+                    return args[num] == null ? node.delete() : node.setValue(args[num]);
+                }
+            }
+
             final StringBuilder builder = new StringBuilder(s.length());
 
             for (int i = 0; i < chars.length; i++) {
@@ -206,10 +223,16 @@ public interface SettingsNode extends ValueType<Object> {
             }
 
             final String s = (String) node.getValue();
-            if (s.trim().isEmpty()) {
+            if (s.length() < 3) {
                 return this;
             }
             final char[] chars = s.toCharArray();
+            if (chars[0] == '{' && chars[chars.length - 1] == '}') {
+                final Object arg = args.get(s.substring(1, s.length() - 1));
+                if (arg != null) {
+                    return node.setValue(arg);
+                }
+            }
             final StringBuilder builder = new StringBuilder(s.length());
 
             int mark = 0;
@@ -248,15 +271,18 @@ public interface SettingsNode extends ValueType<Object> {
         });
     }
 
-    default void delete() {
-        delete(true);
+    @NotNull
+    default SettingsNode delete() {
+        return delete(true);
     }
 
-    default void delete(boolean deep) {
+    @NotNull
+    default SettingsNode delete(boolean deep) {
         final MapNode parent = getParent();
         if (parent != null) {
             parent.remove(getKey(), deep);
         }
+        return this;
     }
 
     @NotNull

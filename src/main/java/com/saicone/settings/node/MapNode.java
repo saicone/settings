@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -66,6 +65,26 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
     @NotNull
     public SettingsNode getRegex(@NotNull @Language(value = "RegExp") String... regexPath) {
         return getIf(Pattern::compile, (s, pattern) -> pattern.matcher(s).matches(), regexPath);
+    }
+
+    @NotNull
+    public SettingsNode getSplit(@NotNull Object path) {
+        final String s = String.valueOf(path);
+        int end = s.indexOf('.');
+        if (end < 1) {
+            return get(s);
+        }
+        int start = 0;
+        final List<String> list = new ArrayList<>();
+        while (end > 0) {
+            if (s.charAt(end - 1) != '\\') {
+                list.add(s.substring(start, end).replace("\\.", "."));
+                start = end + 1;
+            }
+            end = s.indexOf('.', end + 1);
+        }
+        list.add(s.substring(start));
+        return get(list.toArray(new String[0]));
     }
 
     @NotNull

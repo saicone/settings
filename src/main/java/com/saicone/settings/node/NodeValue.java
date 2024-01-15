@@ -6,7 +6,9 @@ import com.saicone.settings.type.Types;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public abstract class NodeValue<V> implements SettingsNode {
 
@@ -28,11 +30,7 @@ public abstract class NodeValue<V> implements SettingsNode {
         if (object instanceof Map) {
             return new MapNode().merge((Map<?, ?>) object, true);
         } else if (object instanceof Iterable) {
-            final List<SettingsNode> list = new ArrayList<>();
-            for (Object o : (Iterable<?>) object) {
-                list.add(of(o));
-            }
-            return new ListNode(list);
+            return new ListNode().merge((Iterable<?>) object);
         } else {
             return new ObjectNode(object);
         }
@@ -147,5 +145,10 @@ public abstract class NodeValue<V> implements SettingsNode {
         this.typeParser = parser;
         this.parsedValue = parsedValue;
         return parsedValue;
+    }
+
+    @Override
+    public String toString() {
+        return asString("null");
     }
 }
