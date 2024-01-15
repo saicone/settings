@@ -14,7 +14,7 @@ public class SettingsUpdater {
 
     private static final SettingsUpdater SIMPLE = new SettingsUpdater(Collections.unmodifiableList(new ArrayList<>())) {
         @Override
-        public <T extends MapNode> T update(@NotNull T base, @Nullable MapNode provider) {
+        public <T extends MapNode> @NotNull T update(@NotNull T base, @Nullable MapNode provider) {
             if (provider != null) {
                 base.deepMerge(provider.getValue());
             }
@@ -37,6 +37,7 @@ public class SettingsUpdater {
         this.nodeUpdates = nodeUpdates;
     }
 
+    @NotNull
     public <T extends MapNode> T update(@NotNull T base, @Nullable MapNode provider) {
         T baseResult = base;
         for (NodeUpdate nodeUpdate : getNodeUpdates()) {
@@ -45,6 +46,7 @@ public class SettingsUpdater {
         return baseResult;
     }
 
+    @NotNull
     public List<NodeUpdate> getNodeUpdates() {
         if (this.nodeUpdates == null) {
             final List<NodeUpdate> list = new ArrayList<>();

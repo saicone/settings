@@ -10,8 +10,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,25 +17,25 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SettingsLoader {
+public class SettingsParser {
 
     private static final Pattern EXPRESSION_VARIABLE = Pattern.compile("\\$\\{([^}]+)}");
     private static final Pattern SUB_VARIABLE = Pattern.compile("\\$\\[([^}]+)]");
 
-    private static final SettingsLoader EMPTY;
-    private static final SettingsLoader SIMPLE;
-    private static final SettingsLoader ALL;
+    private static final SettingsParser EMPTY;
+    private static final SettingsParser SIMPLE;
+    private static final SettingsParser ALL;
 
     static {
-        EMPTY = new SettingsLoader();
+        EMPTY = new SettingsParser();
         EMPTY.immutable = true;
 
         final Map<String, ExpressionParser> expressions = new HashMap<>();
         expressions.put("node", Expressions.NODE);
-        SIMPLE = new SettingsLoader(null, expressions);
+        SIMPLE = new SettingsParser(null, expressions);
         SIMPLE.immutable = true;
 
-        ALL = new SettingsLoader(Parsers.all(), Expressions.all());
+        ALL = new SettingsParser(Parsers.all(), Expressions.all());
         ALL.immutable = true;
     }
 
@@ -47,25 +45,25 @@ public class SettingsLoader {
     private transient boolean immutable;
 
     @NotNull
-    public static SettingsLoader empty() {
+    public static SettingsParser empty() {
         return EMPTY;
     }
 
     @NotNull
-    public static SettingsLoader simple() {
+    public static SettingsParser simple() {
         return SIMPLE;
     }
 
     @NotNull
-    public static SettingsLoader all() {
+    public static SettingsParser all() {
         return ALL;
     }
 
-    public SettingsLoader() {
+    public SettingsParser() {
         this(null, null);
     }
 
-    public SettingsLoader(@Nullable List<NodeParser> parsers, @Nullable Map<String, ExpressionParser> expressions) {
+    public SettingsParser(@Nullable List<NodeParser> parsers, @Nullable Map<String, ExpressionParser> expressions) {
         this.parsers = parsers;
         this.expressions = expressions;
     }
@@ -82,7 +80,7 @@ public class SettingsLoader {
 
     @NotNull
     @Contract("_ -> this")
-    public SettingsLoader addParser(@NotNull NodeParser parser) {
+    public SettingsParser addParser(@NotNull NodeParser parser) {
         if (immutable) {
             throw new IllegalStateException("Cannot edit immutable settings loader");
         }
@@ -95,7 +93,7 @@ public class SettingsLoader {
 
     @NotNull
     @Contract("_, _ -> this")
-    public SettingsLoader addExpression(@NotNull String id, @NotNull ExpressionParser expression) {
+    public SettingsParser addExpression(@NotNull String id, @NotNull ExpressionParser expression) {
         if (immutable) {
             throw new IllegalStateException("Cannot edit immutable settings loader");
         }
@@ -184,13 +182,6 @@ public class SettingsLoader {
             args[i] = arg;
         }
         return expression.parse(root, provider, args);
-    }
-
-    @NotNull
-    public <T extends MapNode> T load(@NotNull SettingsSource source, @NotNull Reader reader, @NotNull T parent) throws IOException {
-        final T node = source.read(reader, parent);
-        parse(source.read(reader, parent));
-        return node;
     }
 
     @Nullable
