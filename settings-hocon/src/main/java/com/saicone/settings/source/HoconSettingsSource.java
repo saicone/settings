@@ -15,7 +15,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.*;
 
-public class HoconSettingsSource extends SettingsSource {
+public class HoconSettingsSource implements SettingsSource {
 
     private final ConfigParseOptions parseOptions;
     private final ConfigRenderOptions renderOptions;

@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ListNode extends NodeKey<List<SettingsNode>> implements List<SettingsNode> {
 
@@ -64,6 +65,11 @@ public class ListNode extends NodeKey<List<SettingsNode>> implements List<Settin
             node.edit(function);
         }
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return getValue().stream().map(Object::toString).collect(Collectors.joining("\n"));
     }
 
     // Default map implementation

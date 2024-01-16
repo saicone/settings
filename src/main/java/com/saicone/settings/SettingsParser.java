@@ -186,11 +186,11 @@ public class SettingsParser {
 
     @Nullable
     @Contract("!null, _, _ -> !null")
-    public <T extends MapNode> T set(@Nullable T node, @NotNull Object value, @NotNull String path) {
+    public <T extends MapNode> T set(@Nullable T node, @NotNull Object value, @NotNull String... path) {
         if (node == null) {
             return null;
         }
-        parse(node, node.getSplit(path).setValue(value));
+        parse(node, node.get(path).setValue(value));
         return node;
     }
 }

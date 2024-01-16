@@ -13,7 +13,7 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-public class GsonSettingsSource extends SettingsSource {
+public class GsonSettingsSource implements SettingsSource {
 
     private static final Type MAP_TYPE = new TypeToken<Map<String, Object>>(){}.getType();
 
