@@ -31,6 +31,8 @@ subprojects {
 
 dependencies {
     compileOnly 'com.ezylang:EvalEx:3.1.1'
+    compileOnly 'com.github.ben-manes.caffeine:caffeine:2.9.3'
+    compileOnly 'com.google.guava:guava:33.0.0-jre'
 }
 
 publishing {
