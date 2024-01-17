@@ -1,12 +1,11 @@
-package com.saicone.settings;
+package com.saicone.settings.data;
 
+import com.saicone.settings.SettingsSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class DataFormat {
 
@@ -15,6 +14,8 @@ public class DataFormat {
 
     static {
         EXTENSIONS.put("conf", "hocon");
+        EXTENSIONS.put("json", "json");
+        EXTENSIONS.put("toml", "toml");
         EXTENSIONS.put("yaml", "yaml");
         EXTENSIONS.put("yml", "yaml");
         try {
@@ -42,6 +43,11 @@ public class DataFormat {
             }
         }
         return format.toLowerCase();
+    }
+
+    @NotNull
+    public static Set<String> getExtensions() {
+        return Collections.unmodifiableSet(EXTENSIONS.keySet());
     }
 
     @NotNull
