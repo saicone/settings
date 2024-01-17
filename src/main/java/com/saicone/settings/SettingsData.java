@@ -74,6 +74,13 @@ public class SettingsData<T extends SettingsNode> {
     }
 
     @NotNull
+    @Contract("_ -> this")
+    public SettingsData<T> source(SettingsSource source) {
+        this.source = source;
+        return this;
+    }
+
+    @NotNull
     public DataType getDataType() {
         return dataType;
     }
@@ -111,7 +118,7 @@ public class SettingsData<T extends SettingsNode> {
         return source;
     }
 
-    @Nullable
+    @NotNull
     public T getLoaded() {
         return loaded;
     }
@@ -170,9 +177,22 @@ public class SettingsData<T extends SettingsNode> {
 
     @NotNull
     public T load() {
+        if (loaded == null) {
+            loaded = nodeSupplier.get();
+        } else if (loaded.isMap()) {
+            loaded.asMapNode().clear();
+        } else if (loaded.isList()) {
+            loaded.asListNode().clear();
+        }
+
         try {
-            Reader reader = createReader();
-            if (optional != null) {
+            Reader reader;
+            try {
+                reader = createReader();
+            } catch (IOException e) {
+                if (optional == null) {
+                    throw e;
+                }
                 if (optionalSupply) {
                     optional.saveInto(this);
                     reader = createReader();
@@ -181,14 +201,13 @@ public class SettingsData<T extends SettingsNode> {
                 }
             }
 
-            this.loaded = nodeSupplier.get();
-            final MapNode node = getSource().read(reader, this.loaded instanceof MapNode ? (MapNode) this.loaded : new MapNode());
-            if (this.loaded instanceof ListNode) {
+            final MapNode node = getSource().read(reader, loaded.isMap() ? loaded.asMapNode() : new MapNode());
+            if (loaded.isList()) {
                 for (Map.Entry<String, SettingsNode> entry : node.getValue().entrySet()) {
-                    ((ListNode) this.loaded).add(entry.getValue().setParent(null));
+                    ((ListNode) loaded).add(entry.getValue().setParent(null));
                 }
             }
-            return this.loaded;
+            return loaded;
         } catch (IOException e) {
             throw new RuntimeException("Cannot load settings node from source", e);
         }
