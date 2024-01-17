@@ -16,7 +16,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class SettingsProvider<T extends SettingsNode> {
+public class SettingsData<T extends SettingsNode> {
 
     // Parameters
     private final DataType dataType;
@@ -25,7 +25,7 @@ public class SettingsProvider<T extends SettingsNode> {
 
     // Mutable parameters
     private String format;
-    private SettingsProvider<T> optional;
+    private SettingsData<T> optional;
     private SettingsSource source;
     private T loaded;
 
@@ -35,16 +35,16 @@ public class SettingsProvider<T extends SettingsNode> {
     private ClassLoader parentClassLoader;
 
     @NotNull
-    public static SettingsProvider<Settings> of(@NotNull String path) {
+    public static SettingsData<Settings> of(@NotNull String path) {
         return of(DataType.of(path), path);
     }
 
     @NotNull
-    public static SettingsProvider<Settings> of(@NotNull DataType dataType, @NotNull String path) {
-        return new SettingsProvider<>(dataType, path, Settings::new);
+    public static SettingsData<Settings> of(@NotNull DataType dataType, @NotNull String path) {
+        return new SettingsData<>(dataType, path, Settings::new);
     }
 
-    public SettingsProvider(@NotNull DataType dataType, @NotNull String path, @NotNull Supplier<T> nodeSupplier) {
+    public SettingsData(@NotNull DataType dataType, @NotNull String path, @NotNull Supplier<T> nodeSupplier) {
         this.dataType = dataType;
         this.nodeSupplier = nodeSupplier;
 
@@ -62,15 +62,15 @@ public class SettingsProvider<T extends SettingsNode> {
 
     @NotNull
     @Contract("_ -> this")
-    public SettingsProvider<T> or(@NotNull SettingsProvider<T> optional) {
+    public SettingsData<T> or(@NotNull SettingsData<T> optional) {
         this.optional = optional;
         return this;
     }
 
     @NotNull
     @Contract("_, _ -> this")
-    public SettingsProvider<T> or(@NotNull DataType dataType, @NotNull String path) {
-        return or(new SettingsProvider<>(dataType, path, nodeSupplier));
+    public SettingsData<T> or(@NotNull DataType dataType, @NotNull String path) {
+        return or(new SettingsData<>(dataType, path, nodeSupplier));
     }
 
     @NotNull
@@ -94,7 +94,7 @@ public class SettingsProvider<T extends SettingsNode> {
     }
 
     @Nullable
-    public SettingsProvider<T> getOptional() {
+    public SettingsData<T> getOptional() {
         return optional;
     }
 
@@ -165,7 +165,7 @@ public class SettingsProvider<T extends SettingsNode> {
 
     @Nullable
     public InputStream getResourceAsStream() {
-        return (parentClassLoader != null ? parentClassLoader : SettingsProvider.class.getClassLoader()).getResourceAsStream(path);
+        return (parentClassLoader != null ? parentClassLoader : SettingsData.class.getClassLoader()).getResourceAsStream(path);
     }
 
     @NotNull
@@ -239,7 +239,7 @@ public class SettingsProvider<T extends SettingsNode> {
         }
     }
 
-    public void saveInto(@NotNull SettingsProvider<?> provider) throws IOException {
+    public void saveInto(@NotNull SettingsData<?> provider) throws IOException {
         if (provider.dataType == DataType.FILE && provider.format.equalsIgnoreCase(format)) {
             final File toFile = provider.getNearestFile(format);
             if (!toFile.getParentFile().exists()) {

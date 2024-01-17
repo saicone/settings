@@ -58,7 +58,7 @@ public class SettingsLoader {
 
     @NotNull
     @SuppressWarnings("unchecked")
-    public <T extends MapNode> T load(@NotNull SettingsProvider<T> provider) {
+    public <T extends MapNode> T load(@NotNull SettingsData<T> provider) {
         T node = provider.load();
         if (updater != null) {
             node = updater.update(node, provider.getOptionalLoaded());
