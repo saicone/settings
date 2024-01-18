@@ -36,6 +36,24 @@ public interface TypeParser<T> {
     }
 
     @NotNull
+    @SuppressWarnings("unchecked")
+    static <T> TypeParser<T> first(@NotNull TypeParser<T> parser) {
+        return (object) -> {
+            if (object instanceof Iterable) {
+                final Iterator<Object> iterator = ((Iterable<Object>) object).iterator();
+                final Object obj;
+                if (iterator.hasNext() && (obj = iterator.next()) != null) {
+                    return parser.parse(obj);
+                } else {
+                    return null;
+                }
+            } else {
+                return parser.parse(object);
+            }
+        };
+    }
+
+    @NotNull
     static <T extends Number> TypeParser<T> number(@NotNull TypeParser<T> parser) {
         return single((object) -> {
             if (object instanceof Boolean) {

@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class Types {
 
@@ -51,7 +50,7 @@ public class Types {
     public static final TypeParser<Float> FLOAT = TypeParser.number((object) -> object instanceof Number ? ((Number) object).floatValue() : Float.parseFloat(String.valueOf(object)));
     public static final TypeParser<Long> LONG = TypeParser.number((object) -> object instanceof Number ? ((Number) object).longValue() : Long.parseLong(String.valueOf(object)));
     public static final TypeParser<Double> DOUBLE = TypeParser.number((object) -> object instanceof Number ? ((Number) object).doubleValue() : Double.parseDouble(String.valueOf(object)));
-    public static final TypeParser<UUID> UUID = TypeParser.single((object) -> {
+    public static final TypeParser<java.util.UUID> UUID = TypeParser.first((object) -> {
         if (object instanceof int[]) {
             final int[] array = (int[]) object;
             if (array.length == 4) {

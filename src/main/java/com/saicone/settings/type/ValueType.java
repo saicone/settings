@@ -6,7 +6,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+@FunctionalInterface
 public interface ValueType<T> {
+
+    @NotNull
+    static <T> ValueType<T> of(T value) {
+        return () -> value;
+    }
 
     T getValue();
 
