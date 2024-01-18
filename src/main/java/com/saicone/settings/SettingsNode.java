@@ -251,4 +251,9 @@ public interface SettingsNode extends ValueType<Object> {
     default ListNode asListNode() {
         return (ListNode) this;
     }
+
+    @NotNull
+    default Object asLiteralObject() {
+        return getValue();
+    }
 }

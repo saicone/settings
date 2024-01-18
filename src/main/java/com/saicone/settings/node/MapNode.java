@@ -314,15 +314,11 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return set;
     }
 
-    @NotNull
-    public Map<String, Object> asObjectMap() {
+    @Override
+    public @NotNull Map<String, Object> asLiteralObject() {
         final Map<String, Object> map = new LinkedHashMap<>();
         for (Entry<String, SettingsNode> entry : getValue().entrySet()) {
-            if (entry.getValue().isMap()) {
-                map.put(entry.getKey(), entry.getValue().asMapNode().asObjectMap());
-            } else {
-                map.put(entry.getKey(), entry.getValue().getValue());
-            }
+            map.put(entry.getKey(), entry.getValue().asLiteralObject());
         }
         return map;
     }

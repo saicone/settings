@@ -68,6 +68,15 @@ public class ListNode extends NodeKey<List<SettingsNode>> implements List<Settin
     }
 
     @Override
+    public @NotNull List<Object> asLiteralObject() {
+        final List<Object> list = new ArrayList<>();
+        for (SettingsNode node : getValue()) {
+            list.add(node.asLiteralObject());
+        }
+        return list;
+    }
+
+    @Override
     public String toString() {
         return getValue().stream().map(Object::toString).collect(Collectors.joining("\n"));
     }
