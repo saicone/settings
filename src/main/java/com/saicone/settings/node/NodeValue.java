@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public abstract class NodeValue<V> implements SettingsNode {
 
@@ -150,5 +151,20 @@ public abstract class NodeValue<V> implements SettingsNode {
     @Override
     public String toString() {
         return asString("null");
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof NodeValue)) return false;
+
+        NodeValue<?> nodeValue = (NodeValue<?>) object;
+
+        return Objects.equals(getValue(), nodeValue.getValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return getValue() != null ? getValue().hashCode() : 0;
     }
 }
