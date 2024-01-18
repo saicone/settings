@@ -316,12 +316,12 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
 
     @NotNull
     public Map<String, Object> asObjectMap() {
-        final Map<String, Object> map = new HashMap<>();
+        final Map<String, Object> map = new LinkedHashMap<>();
         for (Entry<String, SettingsNode> entry : getValue().entrySet()) {
             if (entry.getValue().isMap()) {
                 map.put(entry.getKey(), entry.getValue().asMapNode().asObjectMap());
             } else {
-                map.put(entry.getKey(), entry.getValue());
+                map.put(entry.getKey(), entry.getValue().getValue());
             }
         }
         return map;
@@ -352,7 +352,7 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
             }
             final StringJoiner joiner = new StringJoiner(", ", "{", "}");
             for (Map.Entry<?, ?> entry : ((Map<?, ?>) object).entrySet()) {
-                joiner.add("\"").add(String.valueOf(entry.getKey())).add("\": ").add(asJson(entry.getValue()));
+                joiner.add("\"" + entry.getKey() + "\": " + asJson(entry.getValue()));
             }
             return joiner.toString();
         } else if (object instanceof Boolean || object instanceof Number) {
