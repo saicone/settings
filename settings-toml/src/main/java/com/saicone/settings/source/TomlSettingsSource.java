@@ -74,7 +74,7 @@ public class TomlSettingsSource implements SettingsSource {
             if (config instanceof CommentedConfig) {
                 final String comment = ((CommentedConfig) config).getComment(entry.getKey());
                 if (comment != null) {
-                    node.setTopComment(Arrays.asList(comment.split("\n")));
+                    node.setTopComment(readComment(Arrays.asList(comment.split("\n"))));
                 }
             }
             if (parent != null) {
@@ -128,7 +128,7 @@ public class TomlSettingsSource implements SettingsSource {
                 final Object value = entry.getValue();
                 config.set(key, writeValue(value));
                 if (entry.getValue() instanceof SettingsNode) {
-                    final List<String> topComment = ((SettingsNode) value).getTopComment();
+                    final List<String> topComment = writeComment(((SettingsNode) value).getTopComment());
                     if (topComment != null) {
                         config.setComment(key, String.join("\n", topComment));
                     }
