@@ -30,6 +30,7 @@ public class YamlSettingsSource implements SettingsSource {
 
     public YamlSettingsSource() {
         final LoaderOptions loaderOptions = new LoaderOptions();
+        loaderOptions.setProcessComments(true);
         final DumperOptions dumpOptions = new DumperOptions();
         dumpOptions.setPrettyFlow(true);
         dumpOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -117,7 +118,7 @@ public class YamlSettingsSource implements SettingsSource {
     }
 
     public List<String> readComment(@Nullable List<CommentLine> list) {
-        if (list == null) {
+        if (list == null || list.isEmpty()) {
             return null;
         }
         final List<String> comment = new ArrayList<>();
