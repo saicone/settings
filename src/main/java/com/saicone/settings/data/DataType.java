@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 public enum DataType {
 
     FILE(true),
+    FILE_RESOURCE(true),
     URL(false),
     INPUT_STREAM(false);
 
@@ -16,6 +17,10 @@ public enum DataType {
 
     public boolean isWriteable() {
         return writeable;
+    }
+
+    public boolean isFile() {
+        return this == FILE || this == FILE_RESOURCE;
     }
 
     @NotNull

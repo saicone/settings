@@ -153,6 +153,11 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return (MapNode) super.getRoot();
     }
 
+    @Nullable
+    public SettingsNode put(String key, Object value) {
+        return getValue().put(key, child(key, value));
+    }
+
     public void set(@NotNull SettingsNode node, @NotNull String... path) {
         MapNode mapNode = getRoot();
         final int size = path.length - 1;

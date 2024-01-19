@@ -125,6 +125,9 @@ public class SettingsData<T extends SettingsNode> {
 
     @NotNull
     public File getFile() {
+        if (dataType == DataType.FILE_RESOURCE) {
+            return new File(this.getClass().getResource(path).getFile());
+        }
         File file = parentFolder;
         for (String s : path.split("/")) {
             file = new File(file, s);
@@ -259,13 +262,14 @@ public class SettingsData<T extends SettingsNode> {
     }
 
     public void saveInto(@NotNull SettingsData<?> provider) throws IOException {
-        if (provider.dataType == DataType.FILE && provider.format.equalsIgnoreCase(format)) {
+        if (provider.dataType.isFile() && provider.format.equalsIgnoreCase(format)) {
             final File toFile = provider.getNearestFile(format);
             if (!toFile.getParentFile().exists()) {
                 toFile.getParentFile().mkdirs();
             }
             switch (dataType) {
                 case FILE:
+                case FILE_RESOURCE:
                     final File fromFile = getFile();
                     if (fromFile.exists()) {
                         Files.copy(fromFile.toPath(), toFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -297,6 +301,7 @@ public class SettingsData<T extends SettingsNode> {
     public Reader createReader() throws IOException {
         switch (dataType) {
             case FILE:
+            case FILE_RESOURCE:
                 final File file = getFile();
                 if (file.exists()) {
                     return new BufferedReader(new FileReader(file));
@@ -320,7 +325,7 @@ public class SettingsData<T extends SettingsNode> {
     @NotNull
     public Writer createWriter() throws IOException {
         if (dataType.isWriteable()) {
-            if (dataType == DataType.FILE) {
+            if (dataType.isFile()) {
                 final File file = getFile();
                 if (!file.exists()) {
                     file.createNewFile();
