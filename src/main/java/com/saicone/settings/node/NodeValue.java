@@ -150,7 +150,7 @@ public abstract class NodeValue<V> implements SettingsNode {
 
     @Override
     public String toString() {
-        return asString("null");
+        return Types.STRING.parse(getValue(), "null");
     }
 
     @Override

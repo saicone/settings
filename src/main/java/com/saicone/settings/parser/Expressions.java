@@ -5,10 +5,7 @@ import com.saicone.settings.node.NodeValue;
 import com.saicone.settings.parser.impl.MathExpression;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Expressions {
 
@@ -25,14 +22,24 @@ public class Expressions {
     };
     public static final ExpressionParser JOIN = (root, provider, args) -> {
         final SettingsNode node = root.getSplit(args[0]);
-        final String delimiter = String.valueOf(args[1]);
-        final int start = args.length > 2 ? Integer.parseInt(String.valueOf(args[2])) : 0;
-        final int end = args.length > 3 ? Integer.parseInt(String.valueOf(args[3])) : -1;
-        final List<String> list = node.asStringList();
-        if (!list.isEmpty() && (start > 0 || end > 0)) {
-            return String.join(delimiter, list.subList(start, end > 0 ? end : list.size()));
+        if (node.isList()) {
+            final String delimiter = String.valueOf(args[1]);
+            final int start = args.length > 2 ? Integer.parseInt(String.valueOf(args[2])) : 0;
+            final int end = args.length > 3 ? Integer.parseInt(String.valueOf(args[3])) : -1;
+
+            final List<SettingsNode> list = node.asListNode().getValue();
+            if (start >= list.size()) {
+                return "";
+            }
+
+            final StringJoiner joiner = new StringJoiner(delimiter);
+            int size = end > 0 && end < list.size() ? end : list.size();
+            for (int i = start; i < size; i++) {
+                joiner.add(list.get(i).toString());
+            }
+            return joiner.toString();
         } else {
-            return String.join(delimiter, list);
+            return node.toString();
         }
     };
     public static final ExpressionParser SPLIT = (root, provider, args) -> root.getSplit(args[0]).asString("").split(String.valueOf(args[1]));
