@@ -122,7 +122,6 @@ public interface SettingsNode extends ValueType<Object> {
         return this;
     }
 
-    @NotNull
     default SettingsNode edit(@NotNull Consumer<SettingsNode> consumer) {
         return edit(node -> {
             consumer.accept(node);
@@ -130,7 +129,6 @@ public interface SettingsNode extends ValueType<Object> {
         });
     }
 
-    @NotNull
     default SettingsNode edit(@NotNull Function<SettingsNode, SettingsNode> function) {
         return function.apply(this);
     }
@@ -171,7 +169,7 @@ public interface SettingsNode extends ValueType<Object> {
 
             final char[] chars = s.toCharArray();
             if (chars[0] == '{' && chars[chars.length - 1] == '}') {
-                int i = 1;
+                int i = 0;
                 int num = 0;
                 while (i + 1 < chars.length) {
                     if (!Character.isDigit(chars[i + 1])) {
@@ -181,7 +179,7 @@ public interface SettingsNode extends ValueType<Object> {
                     num *= 10;
                     num += chars[i] - '0';
                 }
-                if (chars[i + 1] == '}') {
+                if (i + 2 == chars.length) {
                     return args[num] == null ? node.delete() : node.setValue(args[num]);
                 }
             }

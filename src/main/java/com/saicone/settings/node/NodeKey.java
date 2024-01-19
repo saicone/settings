@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class NodeKey<V> extends NodeValue<V> {
 
@@ -59,7 +60,7 @@ public class NodeKey<V> extends NodeValue<V> {
     @Override
     public SettingsNode setKey(@Nullable String key) {
         if (this.parent != null) {
-            if (this.key != null) {
+            if (this.key != null && !Objects.equals(this.key, key)) {
                 this.parent.remove(this.key);
             }
             if (key != null) {

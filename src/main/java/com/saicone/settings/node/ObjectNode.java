@@ -30,6 +30,8 @@ public class ObjectNode extends NodeKey<Object> implements IterableType<Object> 
         final SettingsNode node;
         if (value instanceof Map) {
             node = new MapNode(getParent(), getKey()).merge(this).setValue(value);
+        } else if (value instanceof SettingsNode) {
+            node = setValue(((SettingsNode) value).getValue());
         } else if (value instanceof Iterable) {
             node = new ListNode(getParent(), getKey()).merge((SettingsNode) this).setValue(value);
         } else {

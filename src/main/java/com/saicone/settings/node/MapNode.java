@@ -185,7 +185,9 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
             return merge((Map<?, ?>) value);
         }
         final SettingsNode node;
-        if (value instanceof List) {
+        if (value instanceof SettingsNode) {
+            node = setValue(((SettingsNode) value).getValue());
+        } else if (value instanceof List) {
             node = new ListNode(getParent(), getKey()).merge((SettingsNode) this).setValue(value);
         } else {
             node = new ObjectNode(getParent(), getKey()).merge(this).setValue(value);
@@ -236,8 +238,12 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
 
     @Override
     public @NotNull SettingsNode edit(@NotNull Function<SettingsNode, SettingsNode> function) {
-        for (Map.Entry<String, SettingsNode> entry : getValue().entrySet()) {
-            entry.getValue().edit(function);
+        final Map<String, SettingsNode> map = getValue();
+        for (String key : new HashSet<>(map.keySet())) {
+            final SettingsNode node = map.get(key);
+            if (node != null) {
+                node.edit(function);
+            }
         }
         return this;
     }

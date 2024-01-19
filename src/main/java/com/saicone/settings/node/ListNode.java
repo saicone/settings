@@ -42,7 +42,9 @@ public class ListNode extends NodeKey<List<SettingsNode>> implements List<Settin
             return merge((Iterable<?>) value);
         }
         final SettingsNode node;
-        if (value instanceof Map) {
+        if (value instanceof SettingsNode) {
+            node = setValue(((SettingsNode) value).getValue());
+        } else if (value instanceof Map) {
             node = new MapNode(getParent(), getKey()).merge(this).setValue(value);
         } else {
             node = new ObjectNode(getParent(), getKey()).merge(this).setValue(value);
@@ -61,8 +63,21 @@ public class ListNode extends NodeKey<List<SettingsNode>> implements List<Settin
 
     @Override
     public @NotNull SettingsNode edit(@NotNull Function<SettingsNode, SettingsNode> function) {
-        for (SettingsNode node : getValue()) {
-            node.edit(function);
+        final List<SettingsNode> list = getValue();
+        final Iterator<SettingsNode> iterator = list.iterator();
+        int i = 0;
+        while (iterator.hasNext()) {
+            SettingsNode node = iterator.next();
+            if (node != null) {
+                node = node.edit(function);
+                if (node != null) {
+                    list.set(i, node);
+                } else {
+                    i--;
+                    iterator.remove();
+                }
+            }
+            i++;
         }
         return this;
     }
