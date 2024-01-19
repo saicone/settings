@@ -22,7 +22,7 @@ public class DataFormat {
             SOURCE_TYPES.put("json", Class.forName("com.saicone.settings.source.GsonSettingsSource").asSubclass(SettingsSource.class));
         } catch (ClassNotFoundException ignored) { }
         try {
-            SOURCE_TYPES.put("conf", Class.forName("com.saicone.settings.source.HoconSettingsSource").asSubclass(SettingsSource.class));
+            SOURCE_TYPES.put("hocon", Class.forName("com.saicone.settings.source.HoconSettingsSource").asSubclass(SettingsSource.class));
         } catch (ClassNotFoundException ignored) { }
         try {
             SOURCE_TYPES.put("toml", Class.forName("com.saicone.settings.source.TomlSettingsSource").asSubclass(SettingsSource.class));

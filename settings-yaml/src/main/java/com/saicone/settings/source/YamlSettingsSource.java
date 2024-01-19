@@ -76,8 +76,8 @@ public class YamlSettingsSource implements SettingsSource {
             }
             for (Node value : ((SequenceNode) node).getValue()) {
                 final SettingsNode child = readNode(null, null, value);
-                child.setTopComment(readComment(value.getBlockComments()));
-                child.setSideComment(readComment(value.getInLineComments()));
+                child.setTopComment(readCommentLines(value.getBlockComments()));
+                child.setSideComment(readCommentLines(value.getInLineComments()));
                 list.add(child);
             }
             return list;
@@ -102,11 +102,11 @@ public class YamlSettingsSource implements SettingsSource {
             final SettingsNode child = readNode(parent, key, valueNode);
 
             // Read comments
-            child.setTopComment(readComment(keyNode.getBlockComments()));
+            child.setTopComment(readCommentLines(keyNode.getBlockComments()));
             if (valueNode instanceof MappingNode || valueNode instanceof SequenceNode) {
-                child.setSideComment(readComment(keyNode.getInLineComments()));
+                child.setSideComment(readCommentLines(keyNode.getInLineComments()));
             } else {
-                child.setSideComment(readComment(valueNode.getInLineComments()));
+                child.setSideComment(readCommentLines(valueNode.getInLineComments()));
             }
 
             // Save child node
@@ -117,7 +117,7 @@ public class YamlSettingsSource implements SettingsSource {
         return parent;
     }
 
-    public List<String> readComment(@Nullable List<CommentLine> list) {
+    public List<String> readCommentLines(@Nullable List<CommentLine> list) {
         if (list == null || list.isEmpty()) {
             return null;
         }
@@ -173,11 +173,11 @@ public class YamlSettingsSource implements SettingsSource {
                 // Set comments if necessary
                 if (entry.getValue() instanceof SettingsNode) {
                     final SettingsNode node = (SettingsNode) entry.getValue();
-                    writeComment(node.getTopComment(), keyNode, CommentType.BLOCK);
+                    writeCommentLines(node.getTopComment(), keyNode, CommentType.BLOCK);
                     if (node.isMap() || node.isList()) {
-                        writeComment(node.getSideComment(), keyNode, CommentType.IN_LINE);
+                        writeCommentLines(node.getSideComment(), keyNode, CommentType.IN_LINE);
                     } else {
-                        writeComment(node.getSideComment(), valueNode, CommentType.IN_LINE);
+                        writeCommentLines(node.getSideComment(), valueNode, CommentType.IN_LINE);
                     }
                 }
 
@@ -194,8 +194,8 @@ public class YamlSettingsSource implements SettingsSource {
                 }
                 if (value instanceof SettingsNode) {
                     final SettingsNode node = (SettingsNode) value;
-                    writeComment(node.getTopComment(), nodeValue, CommentType.BLOCK);
-                    writeComment(node.getSideComment(), nodeValue, CommentType.IN_LINE);
+                    writeCommentLines(node.getTopComment(), nodeValue, CommentType.BLOCK);
+                    writeCommentLines(node.getSideComment(), nodeValue, CommentType.IN_LINE);
                 }
                 values.add(nodeValue);
             }
@@ -205,7 +205,7 @@ public class YamlSettingsSource implements SettingsSource {
         }
     }
 
-    public void writeComment(@Nullable List<String> comment, @NotNull Node node, @NotNull CommentType commentType) {
+    public void writeCommentLines(@Nullable List<String> comment, @NotNull Node node, @NotNull CommentType commentType) {
         if (comment == null) {
             return;
         }

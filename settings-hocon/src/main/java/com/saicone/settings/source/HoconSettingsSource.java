@@ -109,7 +109,7 @@ public class HoconSettingsSource implements SettingsSource {
 
             final List<String> comments = entry.getValue().origin().comments();
             if (comments != null && !comments.isEmpty()) {
-                node.setTopComment(comments);
+                node.setTopComment(readComment(comments));
             }
 
             parent.put(key, node);
@@ -128,7 +128,7 @@ public class HoconSettingsSource implements SettingsSource {
 
             final List<String> comments = value.origin().comments();
             if (comments != null && !comments.isEmpty()) {
-                child.setTopComment(comments);
+                child.setTopComment(readComment(comments));
             }
 
             node.add(child);
@@ -160,7 +160,7 @@ public class HoconSettingsSource implements SettingsSource {
                 final ConfigValue value = writeValue(entry.getValue());
                 if (value != null) {
                     if (entry.getValue() instanceof SettingsNode) {
-                        value.origin().withComments(((SettingsNode) entry.getValue()).getTopComment());
+                        value.origin().withComments(writeComment(((SettingsNode) entry.getValue()).getTopComment()));
                     }
                     map.put(String.valueOf(entry.getKey()), value);
                 }
@@ -172,7 +172,7 @@ public class HoconSettingsSource implements SettingsSource {
                 final ConfigValue value = writeValue(o);
                 if (value != null) {
                     if (o instanceof SettingsNode) {
-                        value.origin().withComments(((SettingsNode) o).getTopComment());
+                        value.origin().withComments(writeComment(((SettingsNode) o).getTopComment()));
                     }
                     list.add(value);
                 }
