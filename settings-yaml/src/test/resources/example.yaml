@@ -1,0 +1,15 @@
+# Key #1 comment
+key1: "test"
+key2: 1234
+
+# Comment
+key3: # Side comment
+  sub1: "asd"
+  sub2: 1234
+
+key4:
+  sub1: 55
+  # List comment
+  sub2:
+    - 'value1'
+    - "value2"

@@ -40,6 +40,6 @@ public class GsonSettingsSource implements SettingsSource {
 
     @Override
     public void write(@NotNull Writer writer, @NotNull MapNode parent) throws IOException {
-        gson.toJson(parent.asObjectMap(), writer);
+        gson.toJson(parent.asLiteralObject(), writer);
     }
 }

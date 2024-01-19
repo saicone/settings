@@ -1,0 +1,12 @@
+# Key #1 comment
+key1 = "test"
+key2 = 1234
+
+# Comment
+[key3] # Second comment
+sub1 = "asd"
+sub2 = 1234
+
+[key4]
+sub1 = 55
+sub2 = [ 'value1', "value2" ]
