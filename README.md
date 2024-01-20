@@ -3,14 +3,14 @@
 <h4 align="center">Java library to interpret multiple data formats as flexible configuration.</h4>
 
 <p align="center">
+    <a href="https://saic.one/discord">
+        <img src="https://img.shields.io/discord/974288218839191612.svg?style=flat-square&label=discord&logo=discord&logoColor=white&color=7289da"/>
+    </a>
     <a href="https://www.codefactor.io/repository/github/saicone/settings">
         <img src="https://www.codefactor.io/repository/github/saicone/settings/badge?style=flat-square"/>
     </a>
     <a href="https://github.com/saicone/settings">
         <img src="https://img.shields.io/github/languages/code-size/saicone/settings?logo=github&logoColor=white&style=flat-square"/>
-    </a>
-    <a href="https://github.com/saicone/settings">
-        <img src="https://img.shields.io/tokei/lines/github/saicone/settings?logo=github&logoColor=white&style=flat-square"/>
     </a>
     <a href="https://jitpack.io/#com.saicone/settings">
         <img src="https://jitpack.io/v/com.saicone/settings.svg?style=flat-square"/>
