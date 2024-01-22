@@ -21,23 +21,48 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A settings source for toml-formatted data<br>
+ * This class uses electronwill nightconfig library to read and write any data.
+ *
+ * @author Rubenicos
+ */
 public class TomlSettingsSource implements SettingsSource {
 
     private TomlFormat format;
 
+    /**
+     * Constructs a toml settings source with default options.<br>
+     * This means any comment will be parsed.
+     */
     public TomlSettingsSource() {
         this(TomlFormat.instance());
     }
 
+    /**
+     * Constructs a toml settings source with provided toml format loader.
+     *
+     * @param format the toml format to use.
+     */
     public TomlSettingsSource(@NotNull TomlFormat format) {
         this.format = format;
     }
 
+    /**
+     * Get the current toml format loader instance.
+     *
+     * @return a toml format instance.
+     */
     @NotNull
     public TomlFormat getFormat() {
         return format;
     }
 
+    /**
+     * Replace the current toml format loader instance.
+     *
+     * @param format the toml format to use.
+     */
     public void setFormat(@NotNull TomlFormat format) {
         this.format = format;
     }
@@ -48,6 +73,14 @@ public class TomlSettingsSource implements SettingsSource {
         return readConfig(parent, config);
     }
 
+    /**
+     * Read any value as settings node with provided parameters.
+     *
+     * @param parent the associated parent node that value belongs from.
+     * @param key    the node key.
+     * @param value  the value to read.
+     * @return       a newly created settings node.
+     */
     @NotNull
     public SettingsNode readValue(@Nullable MapNode parent, @Nullable String key, @NotNull Object value) {
         if (value instanceof Config) {
@@ -63,6 +96,14 @@ public class TomlSettingsSource implements SettingsSource {
         }
     }
 
+    /**
+     * Read yaml config object values and save into provided parent map node.
+     *
+     * @param parent the parent node to append values.
+     * @param config the config object to read.
+     * @return       the provided parent node.
+     * @param <T>    the map node type.
+     */
     @Nullable
     @Contract("!null, _ -> !null")
     public <T extends MapNode> T readConfig(@Nullable T parent, @NotNull Config config) {
@@ -89,6 +130,12 @@ public class TomlSettingsSource implements SettingsSource {
         format.createWriter().write(writeConfig(parent), writer);
     }
 
+    /**
+     * Write any object into literal compatible object with nightconfig library.
+     *
+     * @param object the object to be converted.
+     * @return       a newly generated compatible object with nightconfig library, null otherwise.
+     */
     @Nullable
     @Contract("!null -> !null")
     public Object writeValue(@Nullable Object object) {
@@ -110,6 +157,12 @@ public class TomlSettingsSource implements SettingsSource {
         }
     }
 
+    /**
+     * Write the provided object into config instance.
+     *
+     * @param object the object to write.
+     * @return       a config that represent the provided object, null otherwise.
+     */
     @Nullable
     @Contract("!null -> !null")
     public Config writeConfig(@Nullable Object object) {

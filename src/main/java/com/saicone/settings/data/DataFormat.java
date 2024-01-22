@@ -7,6 +7,11 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
+/**
+ * Utility class to collect supported data formats and register any settings source parser.
+ *
+ * @author Rubenicos
+ */
 public class DataFormat {
 
     private static final Map<String, String> EXTENSIONS = new LinkedHashMap<>();
@@ -35,6 +40,12 @@ public class DataFormat {
     DataFormat() {
     }
 
+    /**
+     * Get the file extension from provided data format.
+     *
+     * @param format the format to get file extension.
+     * @return       a file extension if found, the provided format otherwise.
+     */
     @NotNull
     public static String getExtension(@NotNull String format) {
         for (Map.Entry<String, String> entry : EXTENSIONS.entrySet()) {
@@ -45,16 +56,33 @@ public class DataFormat {
         return format.toLowerCase();
     }
 
+    /**
+     * Get all the registered file extensions as unmodifiable set.
+     *
+     * @return a set of file extensions.
+     */
     @NotNull
     public static Set<String> getExtensions() {
         return Collections.unmodifiableSet(EXTENSIONS.keySet());
     }
 
+    /**
+     * Get data format from provided file extension.
+     *
+     * @param extension a file extension.
+     * @return          a registered file format if found, the provided extension instead.
+     */
     @NotNull
     public static String getFormat(@NotNull String extension) {
         return EXTENSIONS.getOrDefault(extension.toLowerCase(), extension.toLowerCase());
     }
 
+    /**
+     * Get a new settings source instance from any registered source.
+     *
+     * @param type the data format or file extension.
+     * @return     a newly created settings source instance.
+     */
     @NotNull
     public static SettingsSource getSource(@NotNull String type) {
         final String format = getFormat(type);
@@ -68,6 +96,13 @@ public class DataFormat {
         }
     }
 
+    /**
+     * Register a settings source instance associated with data format.
+     *
+     * @param format the data format type.
+     * @param clazz  the settings source class.
+     * @return       the previous source associated with data format, or null if there was no registered source.
+     */
     @Nullable
     public static Class<? extends SettingsSource> addSource(@NotNull String format, @NotNull Class<? extends SettingsSource> clazz) {
         return SOURCE_TYPES.put(format, clazz);

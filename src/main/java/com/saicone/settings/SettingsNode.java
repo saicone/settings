@@ -471,7 +471,7 @@ public interface SettingsNode extends ValueType<Object> {
      * This is an expensive operation due every child node or list element will be return as it's literal object
      * recursively, so it's not suggested to use this method frequently.
      *
-     * @return teh literal object represented by this node.
+     * @return the literal object represented by this node.
      */
     @NotNull
     default Object asLiteralObject() {

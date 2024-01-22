@@ -440,6 +440,12 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return child;
     }
 
+    /**
+     * Remove node by given condition.
+     *
+     * @param predicate the predicate to compare nodes.
+     * @return          true if any node was removed.
+     */
     public boolean removeIf(@NotNull Predicate<SettingsNode> predicate) {
         return removeIf(predicate, false);
     }

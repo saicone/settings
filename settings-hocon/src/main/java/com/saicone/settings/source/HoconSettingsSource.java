@@ -15,36 +15,74 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.*;
 
+/**
+ * A settings source for hocon-formatted data<br>
+ * This class uses lightbend config library to read and write any data.
+ *
+ * @author Rubenicos
+ */
 public class HoconSettingsSource implements SettingsSource {
 
     private final ConfigParseOptions parseOptions;
     private final ConfigRenderOptions renderOptions;
     private final ConfigResolveOptions resolveOptions;
 
+    /**
+     * Constructs a hocon settings source with default options.<br>
+     * This means any comment will be parsed.
+     */
     public HoconSettingsSource() {
         this(ConfigParseOptions.defaults(), ConfigRenderOptions.defaults(), ConfigResolveOptions.defaults());
     }
 
+    /**
+     * Constructs a hocon settings source with provided parameters.
+     *
+     * @param parseOptions   the parse options to create a config reader.
+     * @param renderOptions  the render options to write config as string.
+     */
     public HoconSettingsSource(@NotNull ConfigParseOptions parseOptions, @NotNull ConfigRenderOptions renderOptions) {
         this(parseOptions, renderOptions, null);
     }
 
+    /**
+     * Constructs a hocon settings source with provided parameters.
+     *
+     * @param parseOptions   the parse options to create a config reader.
+     * @param renderOptions  the render options to write config as string.
+     * @param resolveOptions the resolve options to parse any expression value.
+     */
     public HoconSettingsSource(@NotNull ConfigParseOptions parseOptions, @NotNull ConfigRenderOptions renderOptions, @Nullable ConfigResolveOptions resolveOptions) {
         this.parseOptions = parseOptions;
         this.renderOptions = renderOptions;
         this.resolveOptions = resolveOptions;
     }
 
+    /**
+     * Get the parse options.
+     *
+     * @return the parse options to create a config reader.
+     */
     @NotNull
     public ConfigParseOptions getParseOptions() {
         return parseOptions;
     }
 
+    /**
+     * Get the render options.
+     *
+     * @return the render options to write config as string.
+     */
     @NotNull
     public ConfigRenderOptions getRenderOptions() {
         return renderOptions;
     }
 
+    /**
+     * Get the resolve options.
+     *
+     * @return the resolve options to parse any expression value.
+     */
     @Nullable
     public ConfigResolveOptions getResolveOptions() {
         return resolveOptions;
@@ -56,6 +94,15 @@ public class HoconSettingsSource implements SettingsSource {
         return readConfig(parent, config.root(), resolveOptions == null ? null : config.resolve(resolveOptions).root());
     }
 
+    /**
+     * Read config value as settings node with provided parameters.
+     *
+     * @param parent   the associated parent node that this value belongs from.
+     * @param key      the node key.
+     * @param value    the base config value.
+     * @param resolved the resolved config value.
+     * @return         a newly created settings node.
+     */
     @NotNull
     public SettingsNode readValue(@Nullable MapNode parent, @Nullable String key, @NotNull ConfigValue value, @Nullable ConfigValue resolved) {
         if (value.valueType() == ConfigValueType.OBJECT) {
@@ -96,6 +143,15 @@ public class HoconSettingsSource implements SettingsSource {
         }
     }
 
+    /**
+     * Read config object values and save into provided parent map node.
+     *
+     * @param parent   the parent node to append values.
+     * @param config   the config object to read.
+     * @param resolved the resolved config object.
+     * @return         the provided parent node.
+     * @param <T>      the map node type.
+     */
     @NotNull
     public <T extends MapNode> T readConfig(@NotNull T parent, @NotNull ConfigObject config, @Nullable ConfigObject resolved) {
         if (config.isEmpty()) {
@@ -118,6 +174,14 @@ public class HoconSettingsSource implements SettingsSource {
         return parent;
     }
 
+    /**
+     * Read config list value and save into provided list node.
+     *
+     * @param node     the list node to append values.
+     * @param list     the config list to read.
+     * @param resolved the resolved config list.
+     * @return         the provided list node.
+     */
     @NotNull
     public ListNode readList(@NotNull ListNode node, @NotNull ConfigList list, @Nullable ConfigList resolved) {
         final boolean ignore = resolved == null;
@@ -143,6 +207,12 @@ public class HoconSettingsSource implements SettingsSource {
         writer.write(value.render(renderOptions));
     }
 
+    /**
+     * Write any object into config value.
+     *
+     * @param object the object to be converted.
+     * @return       a newly generated config value from provided object, null otherwise.
+     */
     @Nullable
     @Contract("!null -> !null")
     public ConfigValue writeValue(@Nullable Object object) {

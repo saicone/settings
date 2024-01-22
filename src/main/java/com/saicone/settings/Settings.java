@@ -125,6 +125,13 @@ public class Settings extends MapNode {
         return super.getRegex(regexPath);
     }
 
+    /**
+     * Save supplier value into memory or get from if it actually exists.
+     *
+     * @param id       the value id.
+     * @param supplier the supplier to get value.
+     * @return         the value from memory or the newly generated one.
+     */
     @NotNull
     protected SettingsNode save(@NotNull String id, @NotNull Supplier<@NotNull SettingsNode> supplier) {
         SettingsNode node = memory.get(id);
@@ -136,6 +143,12 @@ public class Settings extends MapNode {
         return node;
     }
 
+    /**
+     * Replace the used settings memory on this instance.
+     *
+     * @param memory the memory to save queried values.
+     * @return       the effective settings object in this operation, normally this instance.
+     */
     @NotNull
     @Contract("_ -> this")
     public Settings setMemory(@Nullable SettingsMemory memory) {
@@ -143,6 +156,11 @@ public class Settings extends MapNode {
         return this;
     }
 
+    /**
+     * Set a regular map memory on this instance.
+     *
+     * @return the effective settings object in this operation, normally this instance.
+     */
     @NotNull
     @Contract("-> this")
     public Settings setMapMemory() {

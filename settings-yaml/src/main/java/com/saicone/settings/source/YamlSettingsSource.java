@@ -24,10 +24,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A settings source for yaml-formatted data<br>
+ * This class uses snakeyaml library to read and write any data.
+ *
+ * @author Rubenicos
+ */
 public class YamlSettingsSource implements SettingsSource {
 
     private PublicYaml yaml;
 
+    /**
+     * Constructs a yaml settings source with default options.<br>
+     * This means any comment will be parsed and the data will be written using pretty flow.
+     */
     public YamlSettingsSource() {
         final LoaderOptions loaderOptions = new LoaderOptions();
         loaderOptions.setProcessComments(true);
@@ -39,6 +49,11 @@ public class YamlSettingsSource implements SettingsSource {
         this.yaml = new PublicYaml(new PublicConstructor(loaderOptions), new Representer(dumpOptions), dumpOptions, loaderOptions);
     }
 
+    /**
+     * Constructs a yaml settings source with provided {@link PublicYaml} wrapped instance.
+     *
+     * @param yaml the yaml instance to use.
+     */
     public YamlSettingsSource(@NotNull PublicYaml yaml) {
         this.yaml = yaml;
     }
@@ -51,11 +66,21 @@ public class YamlSettingsSource implements SettingsSource {
         return options;
     }
 
+    /**
+     * Get the current yaml instance.
+     *
+     * @return a yaml instance.
+     */
     @NotNull
     public Yaml getYaml() {
         return yaml;
     }
 
+    /**
+     * Replace the current yaml instance with provided {@link PublicYaml} wrapped instance.
+     *
+     * @param yaml the yaml instance to use.
+     */
     public void setYaml(@NotNull PublicYaml yaml) {
         this.yaml = yaml;
     }
@@ -65,6 +90,14 @@ public class YamlSettingsSource implements SettingsSource {
         return readMapNode(parent, (MappingNode) realNode(yaml.compose(reader)));
     }
 
+    /**
+     * Read yaml node as settings node with provided parameters.
+     *
+     * @param parent the associated parent node that this node belongs from.
+     * @param key    the node key.
+     * @param node   the yaml node to read.
+     * @return       a newly created settings node.
+     */
     @NotNull
     public SettingsNode readNode(@Nullable MapNode parent, @Nullable String key, @NotNull Node node) {
         if (node instanceof MappingNode) {
@@ -86,6 +119,14 @@ public class YamlSettingsSource implements SettingsSource {
         }
     }
 
+    /**
+     * Read yaml mapping node values and save into provided parent map node.
+     *
+     * @param parent the parent node to append values.
+     * @param node   the yaml node to read.
+     * @return       the provided parent node.
+     * @param <T>    the map node type.
+     */
     @Nullable
     @Contract("!null, _ -> !null")
     public <T extends MapNode> T readMapNode(@Nullable T parent, @NotNull MappingNode node) {
@@ -117,6 +158,12 @@ public class YamlSettingsSource implements SettingsSource {
         return parent;
     }
 
+    /**
+     * Parse yaml comment lines as list of strings.
+     *
+     * @param list the yaml comment to read.
+     * @return     a list of strings containing all the comment lines, null otherwise.
+     */
     public List<String> readCommentLines(@Nullable List<CommentLine> list) {
         if (list == null || list.isEmpty()) {
             return null;
@@ -150,6 +197,12 @@ public class YamlSettingsSource implements SettingsSource {
         yaml.serialize(writeNode(parent), writer);
     }
 
+    /**
+     * Write any object into yaml node object.
+     *
+     * @param object the object to be converted.
+     * @return       a newly generated yaml node from provided object, null otherwise.
+     */
     @Nullable
     @Contract("!null -> !null")
     public Node writeNode(@Nullable Object object) {
@@ -205,6 +258,13 @@ public class YamlSettingsSource implements SettingsSource {
         }
     }
 
+    /**
+     * Write provided list of strings as comment lines into provided node with comment type.
+     *
+     * @param comment     the comment lines to write.
+     * @param node        the node to append comment lines.
+     * @param commentType the type of comment.
+     */
     public void writeCommentLines(@Nullable List<String> comment, @NotNull Node node, @NotNull CommentType commentType) {
         if (comment == null) {
             return;
@@ -224,30 +284,59 @@ public class YamlSettingsSource implements SettingsSource {
         }
     }
 
+    /**
+     * Yaml wrapped instance with public method to get used constructor and representer instances.
+     */
     public static final class PublicYaml extends Yaml {
 
         private final PublicConstructor constructor;
         private final Representer representer;
 
+        /**
+         * Constructs a public yaml wrapped instance.
+         *
+         * @param constructor   the used constructor to read yaml objects.
+         * @param representer   the used representer to write yaml objects.
+         * @param dumperOptions the dump options to write data.
+         * @param loadingConfig the loader configuration to read data.
+         */
         public PublicYaml(@NotNull PublicConstructor constructor, @NotNull Representer representer, @NotNull DumperOptions dumperOptions, @NotNull LoaderOptions loadingConfig) {
             super(constructor, representer, dumperOptions, loadingConfig);
             this.constructor = constructor;
             this.representer = representer;
         }
 
+        /**
+         * Get the used constructor instance that read yaml objects.
+         *
+         * @return a public constructor wrapped class.
+         */
         @NotNull
         public PublicConstructor getConstructor() {
             return constructor;
         }
 
+        /**
+         * Get the used representer instance that write yaml objects.
+         *
+         * @return a representer.
+         */
         @NotNull
         public Representer getRepresenter() {
             return representer;
         }
     }
 
+    /**
+     * Constructor wrapped instance to read java objects from yaml nodes.
+     */
     public static class PublicConstructor extends Constructor {
 
+        /**
+         * Constructs a public constructor wrapped instance.
+         *
+         * @param options the loader options to read data.
+         */
         public PublicConstructor(@NotNull LoaderOptions options) {
             super(options);
         }
