@@ -7,11 +7,26 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Class that represents a node with parent node and key parameter along with value.
+ *
+ * @author Rubenicos
+ *
+ * @param <V> the value type of the node.
+ */
 public class NodeKey<V> extends NodeValue<V> {
 
     private MapNode parent;
     private String key;
 
+    /**
+     * Create a node key with the given parameters.
+     *
+     * @param parent the parent node.
+     * @param key    the node key.
+     * @param object the object to wrap as node key.
+     * @return       a settings object that represents the node key.
+     */
     @NotNull
     public static SettingsNode of(@Nullable MapNode parent, @Nullable String key, @Nullable Object object) {
         if (object instanceof SettingsNode) {
@@ -27,12 +42,25 @@ public class NodeKey<V> extends NodeValue<V> {
         }
     }
 
+    /**
+     * Constructs a node key with the given parameters.
+     *
+     * @param parent the parent node.
+     * @param value  the object to wrap as node key.
+     */
     protected NodeKey(@Nullable MapNode parent, @Nullable V value) {
         super(value);
         this.parent = parent;
         this.key = null;
     }
 
+    /**
+     * Constructs a node key with the given parameters.
+     *
+     * @param parent the parent node.
+     * @param key    the node key.
+     * @param value  the object to wrap as node key.
+     */
     public NodeKey(@Nullable MapNode parent, @Nullable String key, @Nullable V value) {
         super(value);
         this.parent = parent;

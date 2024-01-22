@@ -8,20 +8,47 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Class to handle a list of settings nodes.<br>
+ * This object can also be handled as regular Java list.
+ *
+ * @author Rubenicos
+ */
 public class ListNode extends NodeKey<List<SettingsNode>> implements List<SettingsNode> {
 
+    /**
+     * Constructs an empty list of nodes.
+     */
     public ListNode() {
         this(new ArrayList<>());
     }
 
+    /**
+     * Constructs an list node with the given list value.
+     *
+     * @param value the object to wrap as list node.
+     */
     public ListNode(@Nullable List<SettingsNode> value) {
         this(null, null, value);
     }
 
+    /**
+     * Constructs an list node with the given parameters.
+     *
+     * @param parent the parent node.
+     * @param key    the node key.
+     */
     public ListNode(@Nullable MapNode parent, @Nullable String key) {
         this(parent, key, new ArrayList<>());
     }
 
+    /**
+     * Constructs an list node with the given parameters.
+     *
+     * @param parent the parent node.
+     * @param key    the node key.
+     * @param value  the object to wrap as list node.
+     */
     public ListNode(@Nullable MapNode parent, @Nullable String key, @Nullable List<SettingsNode> value) {
         super(parent, key, value);
     }
@@ -53,6 +80,13 @@ public class ListNode extends NodeKey<List<SettingsNode>> implements List<Settin
         return node;
     }
 
+    /**
+     * Merge provided iterable object into the current list of nodes.<br>
+     * This method also creates a node value for each inherited value.
+     *
+     * @param iterable the object to inherit.
+     * @return         a list node with the merged values, normally the original list itself.
+     */
     @NotNull
     public ListNode merge(@NotNull Iterable<?> iterable) {
         for (Object o : iterable) {

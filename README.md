@@ -7,13 +7,13 @@
         <img src="https://img.shields.io/discord/974288218839191612.svg?style=flat-square&label=discord&logo=discord&logoColor=white&color=7289da"/>
     </a>
     <a href="https://www.codefactor.io/repository/github/saicone/settings">
-        <img src="https://www.codefactor.io/repository/github/saicone/settings/badge?style=flat-square"/>
+        <img src="https://img.shields.io/codefactor/grade/github/saicone/settings?style=flat-square&logo=codefactor&logoColor=white&label=codefactor&color=00b16a"/>
     </a>
     <a href="https://github.com/saicone/settings">
         <img src="https://img.shields.io/github/languages/code-size/saicone/settings?logo=github&logoColor=white&style=flat-square"/>
     </a>
     <a href="https://jitpack.io/#com.saicone/settings">
-        <img src="https://jitpack.io/v/com.saicone/settings.svg?style=flat-square"/>
+        <img src="https://img.shields.io/github/v/tag/saicone/settings?style=flat-square&logo=jitpack&logoColor=white&label=JitPack&color=brigthgreen"/>
     </a>
     <a href="https://javadoc.saicone.com/settings/">
         <img src="https://img.shields.io/badge/JavaDoc-Online-green?style=flat-square"/>

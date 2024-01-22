@@ -8,14 +8,27 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class to save settings nodes into Java map.
+ *
+ * @author Rubenicos
+ */
 public class MapMemory implements SettingsMemory {
 
     private final Map<String, SettingsNode> map;
 
+    /**
+     * Constructs a map memory to save nodes.
+     */
     public MapMemory() {
         this(new HashMap<>());
     }
 
+    /**
+     * Constructs a map memory to save node into provided map.
+     *
+     * @param map the map to save nodes.
+     */
     public MapMemory(@NotNull Map<String, SettingsNode> map) {
         this.map = map;
     }

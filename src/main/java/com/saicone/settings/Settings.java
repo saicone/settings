@@ -11,31 +11,67 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * Class that represent flexible configuration itself.
+ *
+ * @author Rubenicos
+ */
 public class Settings extends MapNode {
 
     private SettingsMemory memory;
 
+    /**
+     * Constructs an empty settings object.<br>
+     * By default, key insertion order will be maintained.
+     */
     public Settings() {
         this(new LinkedHashMap<>());
     }
 
+    /**
+     * Constructs a settings object with the given map type.
+     *
+     * @param nodes the map to save nodes into.
+     */
     public Settings(@NotNull Map<String, SettingsNode> nodes) {
         super(null, null, nodes);
     }
 
+    /**
+     * Constructs an empty settings object with given memory.<br>
+     * By default, key insertion order will be maintained.
+     *
+     * @param memory the memory to save node path ids.
+     */
     public Settings(@Nullable SettingsMemory memory) {
         this(new LinkedHashMap<>(), memory);
     }
 
+    /**
+     * Constructs a settings with the given parameters.
+     *
+     * @param nodes  the map to save nodes into.
+     * @param memory the memory to save node path ids.
+     */
     public Settings(@NotNull Map<String, SettingsNode> nodes, @Nullable SettingsMemory memory) {
         super(null, null, nodes);
         this.memory = memory;
     }
 
+    /**
+     * Check if the settings instance is memorizing node path ids.
+     *
+     * @return true if any memory instance is been used.
+     */
     public boolean isMemorizing() {
         return this.memory != null;
     }
 
+    /**
+     * Get the instance that save path ids.
+     *
+     * @return a settings memory instance.
+     */
     @Nullable
     public SettingsMemory getMemory() {
         return memory;

@@ -5,10 +5,22 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.NoSuchElementException;
 
+/**
+ * Abstract class to inherit into single replaceable object.
+ *
+ * @author Rubenicos
+ *
+ * @param <T> the object type.
+ */
 public abstract class SingleIterator<T> extends TypeIterator<T> {
 
     private boolean consumed = false;
 
+    /**
+     * Constructs a single object iterator.
+     *
+     * @param value the object to inherit.
+     */
     public SingleIterator(@NotNull Object value) {
         super(value);
     }

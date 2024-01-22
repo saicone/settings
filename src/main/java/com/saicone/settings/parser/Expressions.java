@@ -7,8 +7,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+/**
+ * Utility class to collect node expressions that can be parsed.
+ *
+ * @author Rubenicos
+ */
 public class Expressions {
 
+    /**
+     * Expression to get a node with value replaced arguments.
+     */
     public static final ExpressionParser NODE = (root, provider, args) -> {
         final SettingsNode node = root.getSplit(args[0]);
         if (args.length == 1) {
@@ -16,10 +24,16 @@ public class Expressions {
         }
         return NodeValue.of(node.getValue()).replaceArgs(Arrays.copyOfRange(args, 1, args.length));
     };
+    /**
+     * Expression that return the current or given node size.
+     */
     public static final ExpressionParser SIZE = (root, provider, args) -> {
         final SettingsNode node = root.getSplit(args[0]);
         return node.isMap() ? node.asMapNode().size() : node.isList() ? node.asListNode().size() : node.getValue() == null ? -1 : 1;
     };
+    /**
+     * Expression to join a node values from key path.
+     */
     public static final ExpressionParser JOIN = (root, provider, args) -> {
         final SettingsNode node = root.getSplit(args[0]);
         if (node.isList()) {
@@ -42,7 +56,14 @@ public class Expressions {
             return node.toString();
         }
     };
+    /**
+     * Expression to split a node value from path.
+     */
     public static final ExpressionParser SPLIT = (root, provider, args) -> root.getSplit(args[0]).asString("").split(String.valueOf(args[1]));
+    /**
+     * Expression to calculate a mathematical operation.<br>
+     * EvalEx library must be in the current classpath.
+     */
     public static final ExpressionParser MATH;
 
     static {
@@ -61,6 +82,11 @@ public class Expressions {
     Expressions() {
     }
 
+    /**
+     * Constructs a map with all expression parsers in this class.
+     *
+     * @return a map with expression parsers.
+     */
     @NotNull
     public static Map<String, ExpressionParser> all() {
         final Map<String, ExpressionParser> map = new HashMap<>();

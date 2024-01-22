@@ -7,11 +7,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Utility class to handle strings with a variety of methods.
+ *
+ * @author Rubenicos
+ */
 public class Strings {
 
     Strings() {
     }
 
+    /**
+     * Splits provided string around of the given character, ignoring any literal char declaration such as {@code \.} (dot).
+     *
+     * @param s the string to split.
+     * @param c the char that split
+     * @return  the array of strings computed by splitting this string around of the given character.
+     */
     @NotNull
     public static String[] split(@NotNull String s, char c) {
         int end = s.indexOf(c);
@@ -31,11 +43,25 @@ public class Strings {
         return list.toArray(new String[0]);
     }
 
+    /**
+     * Replace every argument denoted by its index value ({0}, {1}, {2}...) inside provided string.
+     *
+     * @param s    the string to replace arguments.
+     * @param args the arguments to be used as replacements.
+     * @return     the string with arguments replaced.
+     */
     @NotNull
     public static String replaceArgs(@NotNull String s, @Nullable Object... args) {
         return replaceArgs(s.toCharArray(), args);
     }
 
+    /**
+     * Replace every argument denoted by its index value ({0}, {1}, {2}...) inside provided characters.
+     *
+     * @param chars the characters to replace arguments.
+     * @param args  the arguments to be used as replacements.
+     * @return      the built string with arguments replaced.
+     */
     @NotNull
     public static String replaceArgs(char[] chars, @Nullable Object... args) {
         final StringBuilder builder = new StringBuilder(chars.length);
@@ -71,11 +97,26 @@ public class Strings {
         return builder.toString();
     }
 
+    /**
+     * Replace every argument denoted by its key value ({key}, {asd}, {name}...) inside provided string.
+     *
+     * @param s    the string to replace arguments.
+     * @param args the arguments to be used as replacements.
+     * @return     the string with arguments replaced.
+     */
     @NotNull
     public static String replaceArgs(@NotNull String s, @NotNull Map<String, Object> args) {
         return replaceArgs(s, s.toCharArray(), args);
     }
 
+    /**
+     * Replace every argument denoted by its key value ({key}, {asd}, {name}...) inside provided characters.
+     *
+     * @param s     the string to be used as char index provider.
+     * @param chars the characters to replace arguments.
+     * @param args  the arguments to be used as replacements.
+     * @return      the built string with arguments replaced.
+     */
     @NotNull
     public static String replaceArgs(@NotNull String s, char[] chars, @NotNull Map<String, Object> args) {
         final StringBuilder builder = new StringBuilder(chars.length);

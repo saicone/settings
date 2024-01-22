@@ -61,6 +61,11 @@ public class SettingsLoader {
     public <T extends MapNode> T load(@NotNull SettingsData<T> provider) {
         T node = provider.load();
         if (updater != null) {
+            if (provider.getOptional() != null) {
+                try {
+                    provider.getOptional().load();
+                } catch (Throwable ignored) { }
+            }
             node = updater.update(node, provider.getOptionalLoaded());
         }
         if (parser != null) {

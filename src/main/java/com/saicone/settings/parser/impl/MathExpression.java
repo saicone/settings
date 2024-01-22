@@ -10,6 +10,11 @@ import com.saicone.settings.parser.ExpressionParser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Class to calculate mathematical operations as node expression parser.
+ *
+ * @author Rubenicos
+ */
 public class MathExpression implements ExpressionParser {
 
     @Override

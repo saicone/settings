@@ -7,18 +7,36 @@ import java.lang.reflect.Array;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 
+/**
+ * Abstract class to inherit into any array.<br>
+ * Accepts any type of primitive and object array.
+ *
+ * @author Rubenicos
+ *
+ * @param <T> the array type.
+ */
 public abstract class ArrayIterator<T> extends TypeIterator<T> {
 
     private final boolean objectArray;
 
-    int currentIndex;
-    int lastIndex = -1;
+    private int currentIndex;
+    private int lastIndex = -1;
 
+    /**
+     * Constructs an array iterator with provided array object.
+     *
+     * @param value the array to inherit.
+     */
     public ArrayIterator(@NotNull Object value) {
         super(value);
         this.objectArray = value instanceof Object[];
     }
 
+    /**
+     * Returns the length of the specified array object, as an int.
+     *
+     * @return the length of the array.
+     */
     public int size() {
         if (objectArray) {
             return ((Object[]) getValue()).length;
@@ -27,6 +45,13 @@ public abstract class ArrayIterator<T> extends TypeIterator<T> {
         }
     }
 
+    /**
+     * Returns the value of the indexed component in the specified array object.
+     * The value is automatically wrapped in an object if it has a primitive type.
+     *
+     * @param index the index.
+     * @return      the (possibly wrapped) value of the indexed component in the specified array.
+     */
     @SuppressWarnings("unchecked")
     public T get(int index) {
         if (objectArray) {
@@ -62,6 +87,11 @@ public abstract class ArrayIterator<T> extends TypeIterator<T> {
         lastIndex = -1;
     }
 
+    /**
+     * Remove value form array at specified index.
+     *
+     * @param index the index.
+     */
     @SuppressWarnings("unchecked")
     public void remove(int index) {
         final int size = size();

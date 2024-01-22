@@ -14,20 +14,47 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+/**
+ * Class to handle a map of settings nodes.<br>
+ * This object can also be handled as regular Java map and inherited in enhanced for loop.
+ *
+ * @author Rubenicos
+ */
 public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<String, SettingsNode>, Iterable<Map.Entry<String, SettingsNode>> {
 
+    /**
+     * Constructs an empty map of nodes.
+     */
     public MapNode() {
         this(new LinkedHashMap<>());
     }
 
+    /**
+     * Constructs a map node with the given map value.
+     *
+     * @param value  the object to wrap as map node.
+     */
     public MapNode(@Nullable Map<String, SettingsNode> value) {
         this(null, null, value);
     }
 
+    /**
+     * Constructs a map node with the given parameters.
+     *
+     * @param parent the parent node.
+     * @param key    the node key.
+     */
     public MapNode(@Nullable MapNode parent, @Nullable String key) {
         this(parent, key, new LinkedHashMap<>());
     }
 
+    /**
+     * Constructs a map node with the given parameters.
+     *
+     * @param parent the parent node.
+     * @param key    the node key.
+     * @param value  the object to wrap as map node.
+     */
     public MapNode(@Nullable MapNode parent, @Nullable String key, @Nullable Map<String, SettingsNode> value) {
         super(parent, key, value);
     }
@@ -37,11 +64,23 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return true;
     }
 
+    /**
+     * Get the node associated with the given key.
+     *
+     * @param key the node key.
+     * @return    a node from the map or a newly created instead.
+     */
     @NotNull
     public SettingsNode get(@NotNull String key) {
         return getIf(s -> s.equals(key), key);
     }
 
+    /**
+     * Get the node associated with the given key path.
+     *
+     * @param path the node path.
+     * @return     a node from any sub map or a newly created instead.
+     */
     @NotNull
     public SettingsNode get(@NotNull String... path) {
         if (path.length == 1) {
@@ -50,11 +89,23 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return getIf(String::equals, path);
     }
 
+    /**
+     * Get the node associated with the given key ignoring case considerations.
+     *
+     * @param key the node key.
+     * @return    a node from the map or a newly created instead.
+     */
     @NotNull
     public SettingsNode getIgnoreCase(@NotNull String key) {
         return getIf(s -> s.equalsIgnoreCase(key), key);
     }
 
+    /**
+     * Get the node associated with the given key path ignoring case considerations.
+     *
+     * @param path the node path.
+     * @return     a node from any sub map or a newly created instead.
+     */
     @NotNull
     public SettingsNode getIgnoreCase(@NotNull String... path) {
         if (path.length == 1) {
@@ -63,12 +114,28 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return getIf(String::equalsIgnoreCase, path);
     }
 
+    /**
+     * Get the node whose key matches with given regex expression.<br>
+     * Instead of {@link #get(String)} or {@link #getIgnoreCase(String)} this method
+     * may create a new node without any defined key.
+     *
+     * @param regex the expression to be compiled.
+     * @return      a node from the map or a newly created without any defined key.
+     */
     @NotNull
     public SettingsNode getRegex(@NotNull @Language("RegExp") String regex) {
         final Pattern pattern = Pattern.compile(regex);
         return getIf(s -> pattern.matcher(s).matches(), null);
     }
 
+    /**
+     * Get the node whose key path matches with given regex expressions.<br>
+     * Instead of {@link #get(String...)} or {@link #getIgnoreCase(String...)} this method
+     * may create a new node without any defined key.
+     *
+     * @param regexPath the expressions to be compiled.
+     * @return          a node from any sub map or a newly created without any defined key.
+     */
     @NotNull
     public SettingsNode getRegex(@NotNull @Language("RegExp") String... regexPath) {
         if (regexPath.length == 1) {
@@ -77,11 +144,26 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return getIf(Pattern::compile, (s, pattern) -> pattern.matcher(s).matches(), regexPath);
     }
 
+    /**
+     * Get the node associated with the given path.<br>
+     * This method will split by dots the provided path into keys
+     * to be used with {@link #get(String...)}.
+     *
+     * @param path the node path.
+     * @return     a node from current map, any sub map or a newly created instead.
+     */
     @NotNull
     public SettingsNode getSplit(@NotNull Object path) {
         return get(Strings.split(String.valueOf(path), '.'));
     }
 
+    /**
+     * Get a node by applying a key comparison.
+     *
+     * @param condition the key predicate.
+     * @param key       the expected key.
+     * @return          a node whose key passes the condition.
+     */
     @NotNull
     protected SettingsNode getIf(@NotNull Predicate<String> condition, @Nullable String key) {
         for (Entry<String, SettingsNode> entry : getValue().entrySet()) {
@@ -95,6 +177,13 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return child();
     }
 
+    /**
+     * Get a node by applying a key comparison.
+     *
+     * @param condition the key comparator.
+     * @param path      the node path.
+     * @return          a node whose key path passes the condition.
+     */
     @NotNull
     protected SettingsNode getIf(@NotNull BiPredicate<String, String> condition, @NotNull String... path) {
         SettingsNode node = this;
@@ -122,6 +211,15 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return node;
     }
 
+    /**
+     * Get a node by applying a custom key conversion comparison.
+     *
+     * @param keyConversion the key conversion.
+     * @param condition     a predicate that evaluates the current key and the converted key from path.
+     * @param path          the pre-converted key path.
+     * @return              a node whose key path passes the condition.
+     * @param <T>           the type conversion.
+     */
     @NotNull
     protected <T> SettingsNode getIf(@NotNull Function<String, T> keyConversion, @NotNull BiPredicate<String, T> condition, @NotNull String... path) {
         SettingsNode node = this;
@@ -138,6 +236,14 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return node;
     }
 
+    /**
+     * Get a node from the current map by applying a type condition along with node key.
+     *
+     * @param condition a predicate that evaluates the current key and the given type.
+     * @param type      the object type.
+     * @return          a node whose key passes the condition.
+     * @param <T>       the type object.
+     */
     @Nullable
     protected <T> SettingsNode getIfType(@NotNull BiPredicate<String, T> condition, @NotNull T type) {
         for (Entry<String, SettingsNode> entry : getValue().entrySet()) {
@@ -153,11 +259,24 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return (MapNode) super.getRoot();
     }
 
+    /**
+     * Puts any type of value into current map by wrap it into a settings node.
+     *
+     * @param key   the node key.
+     * @param value the node value.
+     * @return      the previously associated node with key.
+     */
     @Nullable
     public SettingsNode put(String key, Object value) {
         return getValue().put(key, child(key, value));
     }
 
+    /**
+     * Sets node into given key path inside root map and subsequent maps.
+     *
+     * @param node the node to set.
+     * @param path the node path.
+     */
     public void set(@NotNull SettingsNode node, @NotNull String... path) {
         MapNode mapNode = getRoot();
         final int size = path.length - 1;
@@ -201,16 +320,40 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return node;
     }
 
+    /**
+     * Merge any type of map into map node by creating the
+     * required settings nodes or overriding the parent node.
+     *
+     * @param map     the map to merge.
+     * @return        this object itself.
+     */
     @NotNull
     public MapNode merge(@NotNull Map<?, ?> map) {
         return merge(map, false);
     }
 
+    /**
+     * Merge any type of map into map node by creating the
+     * required settings nodes or overriding the parent node.
+     *
+     * @param map     the map to merge.
+     * @param replace true to replace any value that already exist.
+     * @return        this object itself.
+     */
     @NotNull
     public MapNode merge(@NotNull Map<?, ?> map, boolean replace) {
         return merge(map, replace, false);
     }
 
+    /**
+     * Merge any type of map into map node by creating the
+     * required settings nodes or overriding the parent node.
+     *
+     * @param map     the map to merge.
+     * @param replace true to replace any value that already exist.
+     * @param deep    true to go inside subsequent maps to merge the subsequent maps inside given map.
+     * @return        this object itself.
+     */
     @NotNull
     public MapNode merge(@NotNull Map<?, ?> map, boolean replace, boolean deep) {
         SettingsNode tempNode;
@@ -231,11 +374,30 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return this;
     }
 
+    /**
+     * Merge any type of map into map node by creating the
+     * required settings nodes or overriding the parent node.<br>
+     * This method go inside subsequent maps to merge the
+     * subsequent maps inside given map.
+     *
+     * @param map     the map to merge.
+     * @return        this object itself.
+     */
     @NotNull
     public MapNode deepMerge(@NotNull Map<?, ?> map) {
         return deepMerge(map, false);
     }
 
+    /**
+     * Merge any type of map into map node by creating the
+     * required settings nodes or overriding the parent node.<br>
+     * This method go inside subsequent maps to merge the
+     * subsequent maps inside given map.
+     *
+     * @param map     the map to merge.
+     * @param replace true to replace any value that already exist.
+     * @return        this object itself.
+     */
     @NotNull
     public MapNode deepMerge(@NotNull Map<?, ?> map, boolean replace) {
         return merge(map, replace, true);
@@ -253,10 +415,22 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return this;
     }
 
+    /**
+     * Executed method when any node is deleted by the value itself.
+     *
+     * @param node the deleted node.
+     */
     protected void remove(@NotNull SettingsNode node) {
         // empty default method
     }
 
+    /**
+     * Remove node by given key.
+     *
+     * @param key  the node key.
+     * @param deep true to delete any empty parent path.
+     * @return     the previous node associated with key.
+     */
     public SettingsNode remove(Object key, boolean deep) {
         final SettingsNode child = remove(key);
         final MapNode parent;
@@ -270,6 +444,13 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return removeIf(predicate, false);
     }
 
+    /**
+     * Remove node by given condition.
+     *
+     * @param predicate the predicate to compare nodes.
+     * @param deep      true to delete any empty parent path.
+     * @return          true if any node was removed.
+     */
     public boolean removeIf(@NotNull Predicate<SettingsNode> predicate, boolean deep) {
         final boolean result = getValue().entrySet().removeIf((entry) -> {
             if (predicate.test(entry.getValue())) {
@@ -285,11 +466,23 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return result;
     }
 
+    /**
+     * Create an empty child node without any associated key.
+     *
+     * @return a newly created node.
+     */
     @NotNull
     protected SettingsNode child() {
         return new ObjectNode(this, null);
     }
 
+    /**
+     * Create a child node with the given key.<br>
+     * This method put the node into current map.
+     *
+     * @param key the node key.
+     * @return    a newly created node.
+     */
     @NotNull
     protected SettingsNode child(@NotNull String key) {
         final SettingsNode node = new ObjectNode(this, key, null);
@@ -297,6 +490,14 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return node;
     }
 
+    /**
+     * Create or override a child node with the given key.<br>
+     * This method put the node into current map.
+     *
+     * @param key   the node key.
+     * @param value the node value.
+     * @return      a newly created node or the same value if it's a settings node.
+     */
     @NotNull
     protected SettingsNode child(@NotNull String key, @Nullable Object value) {
         if (value instanceof SettingsNode) {
@@ -307,9 +508,14 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return node;
     }
 
+    /**
+     * Get a linked set with all the node key paths from map values.
+     *
+     * @return a linked set with string arrays.
+     */
     @NotNull
     public Set<String[]> paths() {
-        final Set<String[]> set = new HashSet<>();
+        final Set<String[]> set = new LinkedHashSet<>();
         for (Entry<String, SettingsNode> entry : getValue().entrySet()) {
             if (entry.getValue().isMap()) {
                 for (String[] path : entry.getValue().asMapNode().paths()) {
@@ -334,11 +540,22 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return map;
     }
 
+    /**
+     * Get the current map node as Json formatted text.
+     *
+     * @return a json string.
+     */
     @NotNull
     public String asJson() {
         return asJson(this);
     }
 
+    /**
+     * Get the provided object as it's json representation.
+     *
+     * @param object the object to represent.
+     * @return       a json string.
+     */
     @NotNull
     protected String asJson(@Nullable Object object) {
         if (object == null) {

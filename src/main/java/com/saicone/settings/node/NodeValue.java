@@ -11,6 +11,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Abstract class that represents a node multi-layer value along with comments.<br>
+ * Any type transformation will be cached.
+ *
+ * @author Rubenicos
+ *
+ * @param <V> the value type of the node.
+ */
 public abstract class NodeValue<V> implements SettingsNode {
 
     private Object faceValue;
@@ -23,6 +31,12 @@ public abstract class NodeValue<V> implements SettingsNode {
     private transient TypeParser<?> typeParser;
     private transient Object parsedValue;
 
+    /**
+     * Create a node value with the given object.
+     *
+     * @param object the object to wrap as node value.
+     * @return       a settings node that represents the node value.
+     */
     @NotNull
     public static SettingsNode of(@Nullable Object object) {
         if (object instanceof SettingsNode) {
@@ -37,6 +51,11 @@ public abstract class NodeValue<V> implements SettingsNode {
         }
     }
 
+    /**
+     * Constructs a node value with the given object.
+     *
+     * @param value the value of the node.
+     */
     public NodeValue(@Nullable V value) {
         this.sourceValue = value;
     }
@@ -57,6 +76,11 @@ public abstract class NodeValue<V> implements SettingsNode {
         return (V) (faceValue != null ? faceValue : sourceValue);
     }
 
+    /**
+     * Get the facing value inside the node.
+     *
+     * @return the value that was set after node creation, null otherwise.
+     */
     @Nullable
     public Object getFaceValue() {
         return faceValue;

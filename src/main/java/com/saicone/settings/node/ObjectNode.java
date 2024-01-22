@@ -7,20 +7,47 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
+/**
+ * Class to handle normal object as settings node.<br>
+ * This object can be inherited in enhanced for loop.
+ *
+ * @author Rubenicos
+ */
 public class ObjectNode extends NodeKey<Object> implements IterableType<Object> {
 
+    /**
+     * Constructs an empty object value.
+     */
     public ObjectNode() {
         this(null);
     }
 
+    /**
+     * Constructs an object node with the given value.
+     *
+     * @param value the object to wrap as object node.
+     */
     protected ObjectNode(@Nullable Object value) {
         super(null, value);
     }
 
+    /**
+     * Constructs an empty object node with the given parameters.
+     *
+     * @param parent the parent node.
+     * @param key    the node key.
+     */
     public ObjectNode(@Nullable MapNode parent, @Nullable String key) {
         this(parent, key, null);
     }
 
+    /**
+     * Constructs an empty object node with the given parameters.
+     *
+     * @param parent the parent node.
+     * @param key    the node key.
+     * @param value  the object to wrap as object node.
+     */
     public ObjectNode(@Nullable MapNode parent, @Nullable String key, @Nullable Object value) {
         super(parent, key, value);
     }
