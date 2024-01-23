@@ -68,10 +68,12 @@ tasks.register('allJavadoc', Javadoc) {
     classpath = files(javadocProjects.collect { project(it).sourceSets.main.compileClasspath })
     options {
         links 'https://docs.oracle.com/en/java/javase/11/docs/api/'
-        links 'https://rabbitmq.github.io/rabbitmq-java-client/api/current/'
-        links 'https://javadoc.io/doc/redis.clients/jedis/5.1.0/'
-        links 'https://javadoc.io/doc/com.zaxxer/HikariCP/latest/'
-        links 'https://javadoc.io/doc/org.jetbrains/annotations/latest/'
+        links 'https://javadoc.io/doc/com.ezylang/EvalEx/latest/'
+        links 'https://javadoc.io/doc/com.google.code.gson/gson/latest/'
+        links 'https://javadoc.io/doc/com.typesafe/config/latest/'
+        links 'https://javadoc.io/doc/com.electronwill.night-config/core/latest/'
+        links 'https://javadoc.io/doc/com.electronwill.night-config/toml/latest/'
+        links 'https://javadoc.io/doc/org.yaml/snakeyaml/latest/'
     }
     destinationDir = file(project.buildDir.path + '/docs/all-javadoc')
 }
