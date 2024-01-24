@@ -53,6 +53,11 @@ public class ObjectNode extends NodeKey<Object> implements IterableType<Object> 
     }
 
     @Override
+    public boolean isObject() {
+        return true;
+    }
+
+    @Override
     public @NotNull SettingsNode setValue(@NotNull Object value) {
         final SettingsNode node;
         if (value instanceof Map) {

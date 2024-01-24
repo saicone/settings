@@ -43,6 +43,10 @@ subprojects {
     dependencies {
         implementation rootProject
     }
+
+    javadoc {
+        source.asList().add(rootProject.sourceSets.main.allJava)
+    }
 }
 
 dependencies {
@@ -89,5 +93,5 @@ tasks.register('allJavadoc', Javadoc) {
         links 'https://javadoc.io/doc/com.electronwill.night-config/toml/latest/'
         links 'https://javadoc.io/doc/org.yaml/snakeyaml/latest/'
     }
-    destinationDir = file(project.buildDir.path + '/docs/all-javadoc')
+    destinationDir = file(project.layout.buildDirectory.dir('docs/all-javadoc'))
 }

@@ -2,6 +2,7 @@ package com.saicone.settings;
 
 import com.saicone.settings.node.ListNode;
 import com.saicone.settings.node.MapNode;
+import com.saicone.settings.node.ObjectNode;
 import com.saicone.settings.type.ValueType;
 import com.saicone.settings.util.Strings;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,15 @@ import java.util.function.Predicate;
  * @author Rubenicos
  */
 public interface SettingsNode extends ValueType<Object> {
+
+    /**
+     * Check if the current node is not a map or list.
+     *
+     * @return true if the node is an object node.
+     */
+    default boolean isObject() {
+        return false;
+    }
 
     /**
      * Check if the current node is a map instance.
@@ -418,7 +428,7 @@ public interface SettingsNode extends ValueType<Object> {
     @NotNull
     default SettingsNode delete(boolean deep) {
         final MapNode parent = getParent();
-        if (parent != null) {
+        if (parent != null && getKey() != null) {
             parent.remove(getKey(), deep);
         }
         return this;
@@ -442,6 +452,16 @@ public interface SettingsNode extends ValueType<Object> {
             return setKey(path[path.length - 1]);
         }
         return this;
+    }
+
+    /**
+     * Cast this node into an object node type.
+     *
+     * @return this node.
+     */
+    @NotNull
+    default ObjectNode asObjectNode() {
+        return (ObjectNode) this;
     }
 
     /**
