@@ -356,15 +356,30 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
      */
     @NotNull
     public MapNode merge(@NotNull Map<?, ?> map, boolean replace, boolean deep) {
+        return merge(map, replace, deep, false);
+    }
+
+    /**
+     * Merge any type of map into map node by creating the
+     * required settings nodes or overriding the parent node.
+     *
+     * @param map     the map to merge.
+     * @param replace true to replace any value that already exist.
+     * @param deep    true to go inside subsequent maps to merge the subsequent maps inside given map.
+     * @param append  true to append any node inside provided map into current map instead of creating a new one.
+     * @return        this object itself.
+     */
+    @NotNull
+    public MapNode merge(@NotNull Map<?, ?> map, boolean replace, boolean deep, boolean append) {
         SettingsNode tempNode;
         for (Entry<?, ?> entry : map.entrySet()) {
             final String key = String.valueOf(entry.getKey());
             if (!containsKey(entry.getKey())) {
-                put(key, child(key, entry.getValue()));
+                put(key, child(key, entry.getValue(), append));
             } else if (deep && entry.getValue() instanceof Map && (tempNode = get(entry.getKey())) instanceof MapNode) {
                 tempNode.asMapNode().merge((Map<?, ?>) entry.getValue(), replace, true);
             } else if (replace) {
-                final SettingsNode child = child(key, entry.getValue());
+                final SettingsNode child = child(key, entry.getValue(), append);
                 final SettingsNode replaced = put(key, child);
                 if (replaced != null) {
                     child.mergeComment(replaced);
@@ -497,7 +512,7 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
     }
 
     /**
-     * Create or override a child node with the given key.<br>
+     * Create a child node with the given key and value.<br>
      * This method put the node into current map.
      *
      * @param key   the node key.
@@ -506,7 +521,21 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
      */
     @NotNull
     protected SettingsNode child(@NotNull String key, @Nullable Object value) {
-        if (value instanceof SettingsNode) {
+        return child(key, value, false);
+    }
+
+    /**
+     * Create or append a child node with the given key and value.<br>
+     * This method put the node into current map.
+     *
+     * @param key    the node key.
+     * @param value  the node value.
+     * @param append true to append any settings node value into map.
+     * @return       a newly created node or the same value.
+     */
+    @NotNull
+    protected SettingsNode child(@NotNull String key, @Nullable Object value, boolean append) {
+        if (append && value instanceof SettingsNode) {
             return ((SettingsNode) value).setParent(this);
         }
         final SettingsNode node = NodeKey.of(this, key, value);
