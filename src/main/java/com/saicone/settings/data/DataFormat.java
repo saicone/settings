@@ -78,6 +78,16 @@ public class DataFormat {
     }
 
     /**
+     * Get all formats with associated settings source.
+     *
+     * @return a set of file data formats.
+     */
+    @NotNull
+    public static Set<String> getFormats() {
+        return Collections.unmodifiableSet(SOURCE_TYPES.keySet());
+    }
+
+    /**
      * Get a new settings source instance from any registered source.
      *
      * @param type the data format or file extension.
@@ -104,7 +114,23 @@ public class DataFormat {
      * @return       the previous source associated with data format, or null if there was no registered source.
      */
     @Nullable
-    public static Class<? extends SettingsSource> addSource(@NotNull String format, @NotNull Class<? extends SettingsSource> clazz) {
+    public static Class<? extends SettingsSource> putSource(@NotNull String format, @NotNull Class<? extends SettingsSource> clazz) {
         return SOURCE_TYPES.put(format, clazz);
+    }
+
+    /**
+     * Append a settings source instance associated with data format.<br>
+     * This method will ignore any repeated format.
+     *
+     * @param format the data format type.
+     * @param clazz  the settings source class.
+     * @return       true if the settings source was registered.
+     */
+    public static boolean addSource(@NotNull String format, @NotNull Class<? extends SettingsSource> clazz) {
+        if (SOURCE_TYPES.containsKey(format)) {
+            return false;
+        }
+        SOURCE_TYPES.put(format, clazz);
+        return true;
     }
 }
