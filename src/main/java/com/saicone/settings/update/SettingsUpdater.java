@@ -19,11 +19,12 @@ public class SettingsUpdater {
 
     private static final SettingsUpdater SIMPLE = new SettingsUpdater(Collections.unmodifiableList(new ArrayList<>())) {
         @Override
-        public <T extends MapNode> @NotNull T update(@NotNull T base, @Nullable MapNode provider) {
-            if (provider != null) {
+        public boolean update(@NotNull MapNode base, @Nullable MapNode provider) {
+            if (provider != null && !base.equals(provider)) {
                 base.deepMerge(provider.getValue());
+                return true;
             }
-            return base;
+            return false;
         }
     };
 
@@ -60,16 +61,16 @@ public class SettingsUpdater {
      *
      * @param base     the base node to apply updates into.
      * @param provider the provider map node.
-     * @return         the effective map node in this operation, normally the same base node.
-     * @param <T>      the map node type.
+     * @return         true if any update has been applied into base node.
      */
-    @NotNull
-    public <T extends MapNode> T update(@NotNull T base, @Nullable MapNode provider) {
-        T baseResult = base;
+    public boolean update(@NotNull MapNode base, @Nullable MapNode provider) {
+        boolean result = false;
         for (NodeUpdate nodeUpdate : getNodeUpdates()) {
-            baseResult = nodeUpdate.apply(baseResult);
+            if (nodeUpdate.apply(base)) {
+                result = true;
+            }
         }
-        return baseResult;
+        return result;
     }
 
     /**

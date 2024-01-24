@@ -124,12 +124,9 @@ public class SettingsLoader {
                     provider.getOptional().load();
                 } catch (Throwable ignored) { }
             }
-            T updated = updater.update(node, provider.getOptionalLoaded());
-            if (provider.getDataType().isWriteable() && !node.equals(updated)) {
-                provider.loaded(updated);
+            if (updater.update(node, provider.getOptionalLoaded()) && provider.getDataType().isWriteable()) {
                 provider.save();
             }
-            node = updated;
         }
         if (parser != null) {
             node = (T) parser.parse(node);

@@ -66,16 +66,15 @@ public class NodeUpdate {
     /**
      * Create a node update that aims to do a custom transformation.
      *
-     * @param function the function that accepts a parent map node and probably return itself.
+     * @param function the function that accepts a parent map node and return the update result.
      * @return         a node update that do a custom transformation.
      */
     @NotNull
-    public static NodeUpdate custom(@NotNull Function<MapNode, MapNode> function) {
+    public static NodeUpdate custom(@NotNull Function<MapNode, Boolean> function) {
         return new NodeUpdate(UpdateAction.CUSTOM) {
             @Override
-            @SuppressWarnings("unchecked")
-            public <T extends MapNode> T apply(@NotNull T parent) {
-                return (T) function.apply(parent);
+            public boolean apply(@NotNull MapNode parent) {
+                return function.apply(parent);
             }
         };
     }
@@ -211,13 +210,12 @@ public class NodeUpdate {
      * Apply this node update into provided map node parent.
      *
      * @param parent the parent node to apply this update.
-     * @return       the effective map node in this operation, normally the same map node.
-     * @param <T>    the map node type.
+     * @return       true if the node update was applied.
      */
-    public <T extends MapNode> T apply(@NotNull T parent) {
+    public boolean apply(@NotNull MapNode parent) {
         final SettingsNode node = getNode(parent);
         if (node == null) {
-            return parent;
+            return false;
         }
         switch (action) {
             case ADD:
@@ -229,23 +227,25 @@ public class NodeUpdate {
                             node.move(path);
                         }
                     }
+                    return true;
                 }
                 break;
             case DELETE:
-                node.delete(true);
-                break;
+                return node.delete(true).isReal();
             case REPLACE:
                 node.setValue(value);
-                break;
+                return true;
             case MOVE:
                 final String[] path = getPath();
                 if (path != null) {
+                    final boolean result = node.isReal();
                     node.move(path);
+                    return result;
                 }
                 break;
             default:
                 break;
         }
-        return parent;
+        return false;
     }
 }
