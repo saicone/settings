@@ -4,6 +4,7 @@ import com.saicone.settings.data.DataFormat;
 import com.saicone.settings.data.DataType;
 import com.saicone.settings.node.ListNode;
 import com.saicone.settings.node.MapNode;
+import com.saicone.settings.util.Strings;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -131,6 +132,19 @@ public class SettingsData<T extends SettingsNode> {
     @Contract("_ -> this")
     public SettingsData<T> source(SettingsSource source) {
         this.source = source;
+        return this;
+    }
+
+    /**
+     * Set the loaded settings node from data.
+     *
+     * @param loaded the current settings node.
+     * @return       this settings data instance.
+     */
+    @NotNull
+    @Contract("_ -> this")
+    public SettingsData<T> loaded(@NotNull T loaded) {
+        this.loaded = loaded;
         return this;
     }
 
@@ -267,7 +281,7 @@ public class SettingsData<T extends SettingsNode> {
             return new File(this.getClass().getResource(path).getFile());
         }
         File file = parentFolder;
-        for (String s : path.split("/")) {
+        for (String s : Strings.split(path, '/')) {
             file = new File(file, s);
         }
         if (file == null) {
@@ -476,7 +490,7 @@ public class SettingsData<T extends SettingsNode> {
     public void saveInto(@NotNull SettingsData<?> provider) throws IOException {
         if (provider.dataType.isFile() && provider.format.equalsIgnoreCase(format)) {
             final File toFile = provider.getNearestFile(format);
-            if (!toFile.getParentFile().exists()) {
+            if (toFile.getParentFile() != null && !toFile.getParentFile().exists()) {
                 toFile.getParentFile().mkdirs();
             }
             switch (dataType) {
