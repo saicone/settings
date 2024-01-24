@@ -446,7 +446,9 @@ public interface SettingsNode extends ValueType<Object> {
     default SettingsNode move(@NotNull String... path) {
         final MapNode parent = getParent();
         if (parent != null) {
-            parent.remove(getKey());
+            if (getKey() != null) {
+                parent.remove(getKey(), true);
+            }
             parent.set(this, path);
         } else {
             return setKey(path[path.length - 1]);

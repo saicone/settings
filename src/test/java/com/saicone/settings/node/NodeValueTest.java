@@ -81,4 +81,26 @@ public class NodeValueTest {
 
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void testMapMove() {
+        MapNode expected = new MapNode();
+        expected.child("test", "asd");
+        expected.child("number", 1234);
+        expected.child("sub", ImmutableMap.of("number", 55, "key", true));
+
+        MapNode actual = new MapNode();
+        actual.child("key1", "asd");
+        actual.child("key2", ImmutableMap.of("sub1", true));
+        actual.child("key3", 1234);
+        actual.child("key4", 55);
+        actual.child("sub", ImmutableMap.of("number", 55));
+
+        actual.get("key1").move("test");
+        actual.get("key2", "sub1").move("sub", "key");
+        actual.get("key3").setKey("number");
+        actual.get("key4").delete();
+
+        assertEquals(expected, actual);
+    }
 }
