@@ -22,7 +22,8 @@ public class NodeUpdaterTest {
         MapNode provider = new MapNode();
         provider.child("key1", "Number: 1234");
         provider.child("key3", ImmutableMap.of("sub1", false, "sub2", false));
+        SettingsUpdater.simple().update(actual, provider);
 
-        assertEquals(expected, SettingsUpdater.simple().update(actual, provider));
+        assertEquals(expected, actual);
     }
 }
