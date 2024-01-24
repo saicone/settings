@@ -3,6 +3,13 @@ dependencies {
     api 'com.electronwill.night-config:toml:3.6.7'
 }
 
+javadoc {
+    options {
+        links 'https://javadoc.io/doc/com.electronwill.night-config/core/latest/'
+        links 'https://javadoc.io/doc/com.electronwill.night-config/toml/latest/'
+    }
+}
+
 publishing {
     publications {
         maven(MavenPublication) {

@@ -2,6 +2,12 @@ dependencies {
     api 'com.typesafe:config:1.4.3'
 }
 
+javadoc {
+    options {
+        links 'https://javadoc.io/doc/com.typesafe/config/latest/'
+    }
+}
+
 publishing {
     publications {
         maven(MavenPublication) {

@@ -2,6 +2,12 @@ dependencies {
     api 'org.yaml:snakeyaml:2.2'
 }
 
+javadoc {
+    options {
+        links 'https://javadoc.io/doc/org.yaml/snakeyaml/latest/'
+    }
+}
+
 publishing {
     publications {
         maven(MavenPublication) {

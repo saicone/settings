@@ -30,6 +30,13 @@ allprojects {
         withSourcesJar()
         withJavadocJar()
     }
+
+    javadoc {
+        options {
+            links 'https://docs.oracle.com/en/java/javase/11/docs/api/'
+            links 'https://javadoc.io/doc/org.jetbrains/annotations/latest/'
+        }
+    }
 }
 
 subprojects {
@@ -42,6 +49,12 @@ dependencies {
     compileOnly 'com.ezylang:EvalEx:3.1.1'
     compileOnly 'com.github.ben-manes.caffeine:caffeine:2.9.3'
     compileOnly 'com.google.guava:guava:33.0.0-jre'
+}
+
+javadoc {
+    options {
+        links 'https://javadoc.io/doc/com.ezylang/EvalEx/latest/'
+    }
 }
 
 publishing {
@@ -68,6 +81,7 @@ tasks.register('allJavadoc', Javadoc) {
     classpath = files(javadocProjects.collect { project(it).sourceSets.main.compileClasspath })
     options {
         links 'https://docs.oracle.com/en/java/javase/11/docs/api/'
+        links 'https://javadoc.io/doc/org.jetbrains/annotations/latest/'
         links 'https://javadoc.io/doc/com.ezylang/EvalEx/latest/'
         links 'https://javadoc.io/doc/com.google.code.gson/gson/latest/'
         links 'https://javadoc.io/doc/com.typesafe/config/latest/'
