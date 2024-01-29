@@ -8,6 +8,7 @@ import com.saicone.settings.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -251,11 +252,15 @@ public interface SettingsNode extends ValueType<Object> {
      */
     @NotNull
     default SettingsNode mergeComment(@NotNull SettingsNode node) {
-        if (getTopComment() == null) {
-            setTopComment(node.getTopComment());
+        if (getTopComment() == null && node.getTopComment() != null) {
+            final List<String> comment = new ArrayList<>();
+            comment.addAll(node.getTopComment());
+            setTopComment(comment);
         }
-        if (getSideComment() == null) {
-            setSideComment(node.getSideComment());
+        if (getSideComment() == null && node.getSideComment() != null) {
+            final List<String> comment = new ArrayList<>();
+            comment.addAll(node.getSideComment());
+            setSideComment(comment);
         }
         return this;
     }
