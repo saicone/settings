@@ -2,6 +2,7 @@ package com.saicone.settings;
 
 import com.saicone.settings.node.ListNode;
 import com.saicone.settings.node.MapNode;
+import com.saicone.settings.node.NodeKey;
 import com.saicone.settings.node.ObjectNode;
 import com.saicone.settings.type.ValueType;
 import com.saicone.settings.util.Strings;
@@ -459,6 +460,39 @@ public interface SettingsNode extends ValueType<Object> {
             return setKey(path[path.length - 1]);
         }
         return this;
+    }
+
+    /**
+     * Copy this node into new one and return the clone itself.
+     *
+     * @return       a clone of this node.
+     */
+    @NotNull
+    default SettingsNode copy() {
+        return copy(false);
+    }
+
+    /**
+     * Copy this node into new one and return the clone itself.
+     *
+     * @param parent true to save parent information.
+     * @return       a clone of this node.
+     */
+    @NotNull
+    default SettingsNode copy(boolean parent) {
+        return copy(parent, true);
+    }
+
+    /**
+     * Copy this node into new one and return the clone itself.
+     *
+     * @param parent true to save parent information.
+     * @param key    true to save key information.
+     * @return       a clone of this node.
+     */
+    @NotNull
+    default SettingsNode copy(boolean parent, boolean key) {
+        return NodeKey.of(parent ? getParent() : null, key ? getKey() : null, this);
     }
 
     /**
