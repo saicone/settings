@@ -62,3 +62,253 @@ SettingsData<Settings> data = SettingsData.of("myfile.*").or(DataType.INPUT_STRE
 File folder = new File("folder");
 Settings settings = data.load(folder, true);
 ```
+
+## Dependency
+
+How to use Settings library in your project.
+
+<details>
+  <summary>build.gradle</summary>
+
+```groovy
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.saicone.settings:settings:VERSION'
+    // Other modules
+    implementation 'com.saicone.settings:settings-gson:VERSION'
+    implementation 'com.saicone.settings:settings-hocon:VERSION'
+    implementation 'com.saicone.settings:settings-toml:VERSION'
+    implementation 'com.saicone.settings:settings-yaml:VERSION'
+}
+```
+
+</details>
+
+<details>
+  <summary>build.gradle.kts</summary>
+
+```kotlin
+repositories {
+    maven("https://jitpack.io")
+}
+
+dependencies {
+    implementation("com.saicone.settings:settings:VERSION")
+    // Other modules
+    implementation("com.saicone.settings:settings-gson:VERSION")
+    implementation("com.saicone.settings:settings-hocon:VERSION")
+    implementation("com.saicone.settings:settings-toml:VERSION")
+    implementation("com.saicone.settings:settings-yaml:VERSION")
+}
+```
+
+</details>
+
+<details>
+  <summary>pom.xml</summary>
+
+```xml
+<repositories>
+    <repository>
+        <id>Jitpack</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>com.saicone.settings</groupId>
+        <artifactId>settings</artifactId>
+        <version>VERSION</version>
+        <scope>compile</scope>
+    </dependency>
+    <!-- Other modules -->
+    <dependency>
+        <groupId>com.saicone.settings</groupId>
+        <artifactId>settings-gson</artifactId>
+        <version>VERSION</version>
+        <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.saicone.settings</groupId>
+        <artifactId>settings-hocon</artifactId>
+        <version>VERSION</version>
+        <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.saicone.settings</groupId>
+        <artifactId>settings-toml</artifactId>
+        <version>VERSION</version>
+        <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.saicone.settings</groupId>
+        <artifactId>settings-yaml</artifactId>
+        <version>VERSION</version>
+        <scope>compile</scope>
+    </dependency>
+</dependencies>
+```
+
+</details>
+
+## Relocated Dependency
+
+How to implement and relocate Settings library in your project.
+
+<details>
+  <summary>build.gradle</summary>
+
+```groovy
+plugins {
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.saicone.settings:settings:VERSION'
+    // Other modules
+    implementation 'com.saicone.settings:settings-gson:VERSION'
+    implementation 'com.saicone.settings:settings-hocon:VERSION'
+    implementation 'com.saicone.settings:settings-toml:VERSION'
+    implementation 'com.saicone.settings:settings-yaml:VERSION'
+}
+
+jar.dependsOn (shadowJar)
+
+shadowJar {
+    // Relocate packages (DO NOT IGNORE THIS)
+    relocate 'com.saicone.types', project.group + '.libs.types'
+    relocate 'com.saicone.settings', project.group + '.libs.settings'
+    // Exclude unused classes (optional)
+    minimize()
+}
+```
+
+</details>
+
+<details>
+  <summary>build.gradle.kts</summary>
+
+```kotlin
+plugins {
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+}
+
+repositories {
+    maven("https://jitpack.io")
+}
+
+dependencies {
+    implementation("com.saicone.settings:settings:VERSION")
+    // Other modules
+    implementation("com.saicone.settings:settings-gson:VERSION")
+    implementation("com.saicone.settings:settings-hocon:VERSION")
+    implementation("com.saicone.settings:settings-toml:VERSION")
+    implementation("com.saicone.settings:settings-yaml:VERSION")
+}
+
+tasks {
+    jar {
+        dependsOn(tasks.shadowJar)
+    }
+
+    shadowJar {
+        // Relocate packages (DO NOT IGNORE THIS)
+        relocate("com.saicone.types", "${project.group}.libs.types")
+        relocate("com.saicone.settings", "${project.group}.libs.settings")
+        // Exclude unused classes (optional)
+        minimize()
+    }
+}
+```
+
+</details>
+
+<details>
+  <summary>pom.xml</summary>
+
+```xml
+<repositories>
+    <repository>
+        <id>Jitpack</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>com.saicone.settings</groupId>
+        <artifactId>settings</artifactId>
+        <version>VERSION</version>
+        <scope>compile</scope>
+    </dependency>
+    <!-- Other modules -->
+    <dependency>
+        <groupId>com.saicone.settings</groupId>
+        <artifactId>settings-gson</artifactId>
+        <version>VERSION</version>
+        <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.saicone.settings</groupId>
+        <artifactId>settings-hocon</artifactId>
+        <version>VERSION</version>
+        <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.saicone.settings</groupId>
+        <artifactId>settings-toml</artifactId>
+        <version>VERSION</version>
+        <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.saicone.settings</groupId>
+        <artifactId>settings-yaml</artifactId>
+        <version>VERSION</version>
+        <scope>compile</scope>
+    </dependency>
+</dependencies>
+
+<build>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+            <relocations>
+                <!-- Relocate packages (DO NOT IGNORE THIS) -->
+                <relocation>
+                    <pattern>com.saicone.types</pattern>
+                    <shadedPattern>${project.groupId}.libs.types</shadedPattern>
+                </relocation>
+                <relocation>
+                    <pattern>com.saicone.settings</pattern>
+                    <shadedPattern>${project.groupId}.libs.settings</shadedPattern>
+                </relocation>
+            </relocations>
+            <!-- Exclude unused classes (optional) -->
+            <minimizeJar>true</minimizeJar>
+        </configuration>
+        <executions>
+            <execution>
+                <phase>package</phase>
+                <goals>
+                    <goal>shade</goal>
+                </goals>
+            </execution>
+        </executions>
+    </plugin>
+</build>
+```
+
+</details>
+
+> [!NOTE]  
+> This project use [Types library](https://github.com/saicone/types) to convert data types, so it's required to relocate it's package along with settings package.
