@@ -1,15 +1,12 @@
 package com.saicone.settings.node;
 
 import com.saicone.settings.SettingsNode;
-import com.saicone.settings.type.TypeParser;
-import com.saicone.settings.type.Types;
+import com.saicone.types.TypeParser;
+import com.saicone.types.Types;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Abstract class that represents a node multi-layer value along with comments.<br>
@@ -161,13 +158,40 @@ public abstract class NodeValue<V> implements SettingsNode {
     }
 
     @Override
+    public @NotNull <E> Optional<E> asOptional(@NotNull TypeParser<E> parser) {
+        return Optional.ofNullable(as(parser));
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
-    public <E, C extends Collection<E>> @NotNull C asCollection(@NotNull C collection, @NotNull TypeParser<E> parser) {
+    public <E, C extends Collection<E>> @NotNull C asCollection(@NotNull TypeParser<E> parser, @NotNull C collection) {
         if (parser.equals(this.typeParser) && collection.getClass().isInstance(this.parsedValue)) {
             return (C) this.parsedValue;
         }
         final C parsedValue = parser.collection(collection, getValue());
         this.typeParser = parser;
+        this.parsedValue = parsedValue;
+        return parsedValue;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <E extends Enum<?>> @Nullable E asEnum(@NotNull Class<E> type) {
+        if (type.isInstance(this.parsedValue)) {
+            return (E) this.parsedValue;
+        }
+        final E parsedValue = SettingsNode.super.asEnum(type);
+        this.parsedValue = parsedValue;
+        return parsedValue;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <E extends Enum<?>> @Nullable E asEnum(@NotNull Class<E> type, @NotNull E[] values) {
+        if (type.isInstance(this.parsedValue)) {
+            return (E) this.parsedValue;
+        }
+        final E parsedValue = SettingsNode.super.asEnum(type, values);
         this.parsedValue = parsedValue;
         return parsedValue;
     }

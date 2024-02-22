@@ -1,8 +1,8 @@
 package com.saicone.settings.node;
 
 import com.saicone.settings.SettingsNode;
-import com.saicone.settings.type.IterableType;
-import com.saicone.settings.type.ValueType;
+import com.saicone.types.IterableType;
+import com.saicone.types.ValueType;
 import com.saicone.settings.util.Strings;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;

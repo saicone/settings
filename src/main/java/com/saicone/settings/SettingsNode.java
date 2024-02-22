@@ -4,7 +4,7 @@ import com.saicone.settings.node.ListNode;
 import com.saicone.settings.node.MapNode;
 import com.saicone.settings.node.NodeKey;
 import com.saicone.settings.node.ObjectNode;
-import com.saicone.settings.type.ValueType;
+import com.saicone.types.ValueType;
 import com.saicone.settings.util.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
