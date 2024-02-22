@@ -43,3 +43,22 @@ Currently supporting the formats:
 Take in count this library is not focused as an object serializer, the main purpose is making flexible interactions with multiple data formats at the same time.
 
 It also has simple methods to get nodes as multiple data types if you want to implement your own object serializer.
+
+```java
+// Load settings from Map
+Map<String, Object> map = new HashMap<>();
+map.put("key", "value");
+map.put("otherkey", 1234);
+
+Settings settings = new Settings();
+settings.merge(map);
+
+
+// Settings from any file named "myfile", the format can be any supported format.
+// If file doesn't exist, the optional file "myfile.json" inside .jar will be used.
+SettingsData<Settings> data = SettingsData.of("myfile.*").or(DataType.INPUT_STREAM, "myfile.json");
+// Load settings by providing a parent folder.
+// Also, optional file will be saved inside the folder if original file doesn't exist
+File folder = new File("folder");
+Settings settings = data.load(folder, true);
+```
