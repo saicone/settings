@@ -1,6 +1,6 @@
 dependencies {
     //api 'org.tomlj:tomlj:1.1.0'
-    api 'com.electronwill.night-config:toml:3.6.7'
+    api 'com.electronwill.night-config:toml:3.8.1'
 }
 
 javadoc {

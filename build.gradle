@@ -17,11 +17,11 @@ allprojects {
     }
 
     dependencies {
-        compileOnly 'org.jetbrains:annotations:24.1.0'
+        compileOnly 'org.jetbrains:annotations:26.0.1'
 
-        testImplementation(platform('org.junit:junit-bom:5.10.1'))
+        testImplementation(platform('org.junit:junit-bom:5.11.3'))
         testImplementation('org.junit.jupiter:junit-jupiter')
-        testImplementation('com.google.guava:guava:33.0.0-jre')
+        testImplementation('com.google.guava:guava:33.3.1-jre')
     }
 
     test {
@@ -33,8 +33,8 @@ allprojects {
     }
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
         withSourcesJar()
         withJavadocJar()
     }
@@ -58,10 +58,10 @@ subprojects {
 }
 
 dependencies {
-    api 'com.saicone:types:1.0'
+    api 'com.saicone:types:1.2'
 
-    compileOnly 'com.ezylang:EvalEx:3.1.1'
-    compileOnly 'com.github.ben-manes.caffeine:caffeine:2.9.3'
+    compileOnly 'com.ezylang:EvalEx:3.4.0'
+    compileOnly 'com.github.ben-manes.caffeine:caffeine:3.1.8'
     compileOnly 'com.google.guava:guava:33.0.0-jre'
 }
 

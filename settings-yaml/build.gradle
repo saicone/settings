@@ -1,5 +1,5 @@
 dependencies {
-    api 'org.yaml:snakeyaml:2.2'
+    api 'org.yaml:snakeyaml:2.3'
 }
 
 javadoc {
