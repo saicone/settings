@@ -176,7 +176,7 @@ public abstract class NodeValue<V> implements SettingsNode {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E extends Enum<?>> @Nullable E asEnum(@NotNull Class<E> type) {
+    public <E extends Enum<E>> @Nullable E asEnum(@NotNull Class<E> type) {
         if (type.isInstance(this.parsedValue)) {
             return (E) this.parsedValue;
         }
@@ -187,7 +187,7 @@ public abstract class NodeValue<V> implements SettingsNode {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E extends Enum<?>> @Nullable E asEnum(@NotNull Class<E> type, @NotNull E[] values) {
+    public <E extends Enum<E>> @Nullable E asEnum(@NotNull Class<E> type, @NotNull E[] values) {
         if (type.isInstance(this.parsedValue)) {
             return (E) this.parsedValue;
         }

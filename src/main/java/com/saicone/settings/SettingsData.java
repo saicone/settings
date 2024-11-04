@@ -267,6 +267,9 @@ public class SettingsData<T extends SettingsNode> {
      */
     @NotNull
     public T getLoaded() {
+        if (loaded == null) {
+            loaded = nodeSupplier.get();
+        }
         return loaded;
     }
 
@@ -475,7 +478,7 @@ public class SettingsData<T extends SettingsNode> {
             return;
         }
         try (Writer writer = createWriter()) {
-            source.write(writer, node);
+            getSource().write(writer, node);
         } catch (IOException e) {
             throw new RuntimeException("Cannot save loaded map node into source", e);
         }
@@ -488,6 +491,9 @@ public class SettingsData<T extends SettingsNode> {
      * @throws IOException if any error occurs while data is transferred.
      */
     public void saveInto(@NotNull SettingsData<?> provider) throws IOException {
+        if (provider.format.equals("*")) {
+            provider.format = format;
+        }
         if (provider.dataType.isFile() && provider.format.equalsIgnoreCase(format)) {
             final File toFile = provider.getNearestFile(format);
             if (toFile.getParentFile() != null && !toFile.getParentFile().exists()) {
