@@ -1,14 +1,22 @@
 package com.saicone.settings.node;
 
 import com.saicone.settings.SettingsNode;
+import com.saicone.settings.util.Strings;
 import com.saicone.types.IterableType;
 import com.saicone.types.ValueType;
-import com.saicone.settings.util.Strings;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringJoiner;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;

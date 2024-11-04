@@ -5,7 +5,9 @@ import com.saicone.types.Types;
 import com.saicone.types.ValueType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Represents a value that can be converted into different types of objects.

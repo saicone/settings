@@ -5,7 +5,11 @@ import com.saicone.settings.node.NodeValue;
 import com.saicone.settings.parser.impl.MathExpression;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * Utility class to collect node expressions that can be parsed.
