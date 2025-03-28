@@ -21,7 +21,7 @@ allprojects {
 
         testImplementation(platform('org.junit:junit-bom:5.11.3'))
         testImplementation('org.junit.jupiter:junit-jupiter')
-        testImplementation('com.google.guava:guava:33.3.1-jre')
+        testImplementation('com.google.guava:guava:33.4.0-jre')
     }
 
     test {
@@ -62,7 +62,7 @@ dependencies {
 
     compileOnly 'com.ezylang:EvalEx:3.4.0'
     compileOnly 'com.github.ben-manes.caffeine:caffeine:3.1.8'
-    compileOnly 'com.google.guava:guava:33.3.1-jre'
+    compileOnly 'com.google.guava:guava:33.4.0-jre'
 }
 
 javadoc {
