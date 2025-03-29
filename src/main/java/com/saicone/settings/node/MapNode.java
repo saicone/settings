@@ -293,12 +293,12 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
             final SettingsNode child = mapNode.getValue().get(key);
             if (child == null) {
                 mapNode = new MapNode(this, key);
-                put(key, mapNode);
+                mapNode.getValue().put(key, mapNode);
             } else if (child.isMap()) {
                 mapNode = child.asMapNode();
             } else {
                 mapNode = new MapNode(this, key);
-                put(key, mapNode.mergeComment(child));
+                mapNode.getValue().put(key, mapNode.mergeComment(child));
             }
         }
         final String key = path[path.length - 1];
