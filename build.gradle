@@ -66,7 +66,7 @@ dependencies {
 
     compileOnly 'com.ezylang:EvalEx:3.4.0'
     compileOnly 'com.github.ben-manes.caffeine:caffeine:3.2.0'
-    compileOnly 'com.google.guava:guava:33.3.1-jre'
+    compileOnly 'com.google.guava:guava:33.4.6-jre'
 }
 
 javadoc {
