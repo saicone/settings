@@ -70,6 +70,15 @@ public interface SettingsNode extends ValueType<Object> {
     }
 
     /**
+     * Check if the current node is empty.
+     *
+     * @return true if the node contains no value or elements inside.
+     */
+    default boolean isEmpty() {
+        return getValue() == null;
+    }
+
+    /**
      * Check if the current node has any top comment.
      *
      * @return true if the node contains a top comment.
