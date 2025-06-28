@@ -205,7 +205,7 @@ public interface SettingsNode extends ValueType<Object> {
         if (lines != null) {
             final List<String> topComment = getTopComment();
             if (topComment == null) {
-                return setTopComment(lines);
+                return setTopComment(new ArrayList<>(lines));
             } else {
                 topComment.addAll(lines);
             }
@@ -224,7 +224,7 @@ public interface SettingsNode extends ValueType<Object> {
         if (lines != null) {
             final List<String> sideComment = getSideComment();
             if (sideComment == null) {
-                return setTopComment(lines);
+                return setSideComment(new ArrayList<>(lines));
             } else {
                 sideComment.addAll(lines);
             }
