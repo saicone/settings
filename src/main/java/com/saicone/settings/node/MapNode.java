@@ -280,26 +280,27 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
     }
 
     /**
-     * Sets node into given key path inside root map and subsequent maps.
+     * Sets node into given key path and subsequent maps.
      *
      * @param node the node to set.
      * @param path the node path.
      */
     public void set(@NotNull SettingsNode node, @NotNull String... path) {
-        MapNode mapNode = getRoot();
+        MapNode mapNode = this;
         final int size = path.length - 1;
         for (int i = 0; i < size; i++) {
             final String key = path[i];
-            final SettingsNode child = mapNode.getValue().get(key);
+            SettingsNode child = mapNode.getValue().get(key);
             if (child == null) {
-                mapNode = new MapNode(this, key);
-                mapNode.getValue().put(key, mapNode);
-            } else if (child.isMap()) {
-                mapNode = child.asMapNode();
-            } else {
-                mapNode = new MapNode(this, key);
-                mapNode.getValue().put(key, mapNode.mergeComment(child));
+                child = new MapNode(mapNode, key);
+                mapNode.getValue().put(key, child);
+            } else if (!child.isMap()) {
+                final SettingsNode temp = new MapNode(mapNode, key);
+                temp.mergeComment(child);
+                child = temp;
+                mapNode.getValue().put(key, child);
             }
+            mapNode = child.asMapNode();
         }
         final String key = path[path.length - 1];
         node.setKey(key);
