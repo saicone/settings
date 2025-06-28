@@ -62,7 +62,7 @@ subprojects {
 }
 
 dependencies {
-    api 'com.saicone:types:1.2'
+    api 'com.saicone:types:1.3.0'
 
     compileOnly 'com.ezylang:EvalEx:3.4.0'
     compileOnly 'com.github.ben-manes.caffeine:caffeine:3.2.0'
