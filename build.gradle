@@ -65,7 +65,7 @@ dependencies {
     api 'com.saicone:types:1.3.0'
 
     compileOnly 'com.ezylang:EvalEx:3.5.0'
-    compileOnly 'com.github.ben-manes.caffeine:caffeine:3.2.1'
+    compileOnly 'com.github.ben-manes.caffeine:caffeine:v3.2.2'
     compileOnly 'com.google.guava:guava:33.4.8-jre'
 }
 
