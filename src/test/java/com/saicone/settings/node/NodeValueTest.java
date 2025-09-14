@@ -97,7 +97,7 @@ public class NodeValueTest {
         actual.child("sub", ImmutableMap.of("number", 55));
 
         actual.get("key1").move("test");
-        actual.get("key2", "sub1").move("sub", "key");
+        actual.get("key2", "sub1").moveRoot("sub", "key");
         actual.get("key3").setKey("number");
         actual.get("key4").delete();
 

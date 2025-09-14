@@ -462,9 +462,31 @@ public interface SettingsNode extends ValueType<Object> {
         final MapNode parent = getParent();
         if (parent != null) {
             if (getKey() != null) {
-                parent.remove(getKey(), true);
+                parent.remove(getKey(), false);
             }
             parent.set(this, path);
+        } else {
+            return setKey(path[path.length - 1]);
+        }
+        return this;
+    }
+
+    /**
+     * Move this node to other key path starting from root node.<br>
+     * This operation only will be effective if the current node contains a parent node,
+     * otherwise only it's key will be updated with latest path key.
+     *
+     * @param path the new node path.
+     * @return     the effective node in this operation, normally this node.
+     */
+    @NotNull
+    default SettingsNode moveRoot(@NotNull String... path) {
+        final MapNode parent = getParent();
+        if (parent != null) {
+            if (getKey() != null) {
+                parent.remove(getKey(), true);
+            }
+            getRoot().asMapNode().set(this, path);
         } else {
             return setKey(path[path.length - 1]);
         }
