@@ -1,7 +1,7 @@
 package com.saicone.settings.node;
 
 import com.saicone.settings.SettingsNode;
-import com.saicone.types.IterableType;
+import com.saicone.types.AnyIterable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @author Rubenicos
  */
-public class ObjectNode extends NodeKey<Object> implements IterableType<Object> {
+public class ObjectNode extends NodeKey<Object> implements AnyIterable<Object> {
 
     /**
      * Constructs an empty object value.

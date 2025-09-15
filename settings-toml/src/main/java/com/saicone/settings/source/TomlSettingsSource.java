@@ -8,7 +8,7 @@ import com.saicone.settings.SettingsSource;
 import com.saicone.settings.node.ListNode;
 import com.saicone.settings.node.MapNode;
 import com.saicone.settings.node.NodeKey;
-import com.saicone.types.ValueType;
+import com.saicone.types.AnyObject;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -153,7 +153,7 @@ public class TomlSettingsSource implements SettingsSource {
             }
             return list;
         } else {
-            return object instanceof ValueType ? ((ValueType<?>) object).getValue() : object;
+            return object instanceof AnyObject ? ((AnyObject<?>) object).getValue() : object;
         }
     }
 

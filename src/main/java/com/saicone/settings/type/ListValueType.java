@@ -2,7 +2,7 @@ package com.saicone.settings.type;
 
 import com.saicone.types.TypeParser;
 import com.saicone.types.Types;
-import com.saicone.types.ValueType;
+import com.saicone.types.AnyObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -17,7 +17,7 @@ import java.util.UUID;
  * @param <T> the value type itself.
  */
 @FunctionalInterface
-public interface ListValueType<T> extends ValueType<T> {
+public interface ListValueType<T> extends AnyObject<T> {
 
     /**
      * Create a wrapped value type from given object type.

@@ -2,8 +2,8 @@ package com.saicone.settings.node;
 
 import com.saicone.settings.SettingsNode;
 import com.saicone.settings.util.Strings;
-import com.saicone.types.IterableType;
-import com.saicone.types.ValueType;
+import com.saicone.types.AnyIterable;
+import com.saicone.types.AnyObject;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -606,11 +606,11 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
             return "null";
         }
 
-        if (object instanceof ValueType) {
-            return asJson(((ValueType<?>) object).getValue());
+        if (object instanceof AnyObject) {
+            return asJson(((AnyObject<?>) object).getValue());
         } else if (object instanceof Iterable || object.getClass().isArray()) {
             final StringJoiner joiner = new StringJoiner(", ", "[", "]");
-            for (Object o : object instanceof Iterable ? (Iterable<?>) object : IterableType.of(object)) {
+            for (Object o : object instanceof Iterable ? (Iterable<?>) object : AnyIterable.of(object)) {
                 joiner.add(asJson(o));
             }
             return joiner.toString();

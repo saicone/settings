@@ -164,7 +164,7 @@ How to implement and relocate Settings library in your project.
 
 ```groovy
 plugins {
-    id 'com.gradleup.shadow' version '8.3.5'
+    id 'com.gradleup.shadow' version '8.3.9'
 }
 
 repositories {
@@ -198,7 +198,7 @@ shadowJar {
 
 ```kotlin
 plugins {
-    id("com.gradleup.shadow") version "8.3.5"
+    id("com.gradleup.shadow") version "8.3.9"
 }
 
 repositories {

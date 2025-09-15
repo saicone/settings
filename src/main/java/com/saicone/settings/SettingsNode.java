@@ -5,7 +5,7 @@ import com.saicone.settings.node.MapNode;
 import com.saicone.settings.node.NodeKey;
 import com.saicone.settings.node.ObjectNode;
 import com.saicone.settings.util.Strings;
-import com.saicone.types.ValueType;
+import com.saicone.types.AnyObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +22,7 @@ import java.util.function.Predicate;
  *
  * @author Rubenicos
  */
-public interface SettingsNode extends ValueType<Object> {
+public interface SettingsNode extends AnyObject<Object> {
 
     /**
      * Check if the current node is not a map or list.

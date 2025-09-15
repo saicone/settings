@@ -172,7 +172,7 @@ public abstract class NodeValue<V> implements SettingsNode {
         if (parser.equals(this.typeParser) && collection.getClass().isInstance(this.parsedValue)) {
             return (C) this.parsedValue;
         }
-        final C parsedValue = parser.collection(collection, getValue());
+        final C parsedValue = parser.collection(collection.getClass(), capacity -> collection).parse(getValue());
         this.typeParser = parser;
         this.parsedValue = parsedValue;
         return parsedValue;
