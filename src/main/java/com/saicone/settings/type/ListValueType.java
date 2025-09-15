@@ -1,11 +1,9 @@
 package com.saicone.settings.type;
 
-import com.saicone.types.TypeParser;
 import com.saicone.types.Types;
 import com.saicone.types.AnyObject;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,7 +43,6 @@ public interface ListValueType<T> extends AnyObject<T> {
      * Convert this object into a list of strings.
      *
      * @see Types#STRING
-     * @see TypeParser#collection(Collection, Object)
      *
      * @return a list containing only values that was converted into strings.
      */
@@ -58,7 +55,6 @@ public interface ListValueType<T> extends AnyObject<T> {
      * Convert this object into a list of characters.
      *
      * @see Types#CHAR
-     * @see TypeParser#collection(Collection, Object)
      *
      * @return a list containing only values that was converted into characters.
      */
@@ -71,7 +67,6 @@ public interface ListValueType<T> extends AnyObject<T> {
      * Convert this object into a list of booleans.
      *
      * @see Types#BOOLEAN
-     * @see TypeParser#collection(Collection, Object)
      *
      * @return a list containing only values that was converted into booleans.
      */
@@ -84,7 +79,6 @@ public interface ListValueType<T> extends AnyObject<T> {
      * Convert this object into a list of bytes.
      *
      * @see Types#BYTE
-     * @see TypeParser#collection(Collection, Object)
      *
      * @return a list containing only values that was converted into bytes.
      */
@@ -97,7 +91,6 @@ public interface ListValueType<T> extends AnyObject<T> {
      * Convert this object into a list of shorts.
      *
      * @see Types#SHORT
-     * @see TypeParser#collection(Collection, Object)
      *
      * @return a list containing only values that was converted into shorts.
      */
@@ -110,7 +103,6 @@ public interface ListValueType<T> extends AnyObject<T> {
      * Convert this object into a list of integers.
      *
      * @see Types#INTEGER
-     * @see TypeParser#collection(Collection, Object)
      *
      * @return a list containing only values that was converted into integers.
      */
@@ -123,7 +115,6 @@ public interface ListValueType<T> extends AnyObject<T> {
      * Convert this object into a list of floats.
      *
      * @see Types#FLOAT
-     * @see TypeParser#collection(Collection, Object)
      *
      * @return a list containing only values that was converted into floats.
      */
@@ -136,7 +127,6 @@ public interface ListValueType<T> extends AnyObject<T> {
      * Convert this object into a list of longs.
      *
      * @see Types#LONG
-     * @see TypeParser#collection(Collection, Object)
      *
      * @return a list containing only values that was converted into longs.
      */
@@ -149,7 +139,6 @@ public interface ListValueType<T> extends AnyObject<T> {
      * Convert this object into a list of doubles.
      *
      * @see Types#DOUBLE
-     * @see TypeParser#collection(Collection, Object)
      *
      * @return a list containing only values that was converted into doubles.
      */
@@ -162,7 +151,6 @@ public interface ListValueType<T> extends AnyObject<T> {
      * Convert this object into a list of unique IDs.
      *
      * @see Types#UUID
-     * @see TypeParser#collection(Collection, Object)
      *
      * @return a list containing only values that was converted into unique IDs.
      */
