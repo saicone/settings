@@ -135,8 +135,8 @@ public class YamlSettingsSource implements SettingsSource {
      */
     @Nullable
     @Contract("!null, _ -> !null")
-    public <T extends MapNode> T readMapNode(@Nullable T parent, @NotNull MappingNode node) {
-        if (node.getValue().isEmpty()) {
+    public <T extends MapNode> T readMapNode(@Nullable T parent, @Nullable MappingNode node) {
+        if (node == null || node.getValue().isEmpty()) {
             return parent;
         }
         for (NodeTuple tuple : node.getValue()) {
