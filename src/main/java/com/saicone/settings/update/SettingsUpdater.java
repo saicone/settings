@@ -57,6 +57,16 @@ public class SettingsUpdater {
     }
 
     /**
+     * Update the given base node.
+     *
+     * @param base     the base node to apply updates into.
+     * @return         true if any update has been applied into base node.
+     */
+    public boolean update(@NotNull MapNode base) {
+        return update(base, null);
+    }
+
+    /**
      * Update the given base node along with optional provider map node.
      *
      * @param base     the base node to apply updates into.
@@ -103,5 +113,14 @@ public class SettingsUpdater {
             this.nodeUpdates = list;
         }
         return nodeUpdates;
+    }
+
+    /**
+     * Add a node update to this instance.
+     *
+     * @param update the node update to add.
+     */
+    public void add(@NotNull NodeUpdate update) {
+        getNodeUpdates().add(update);
     }
 }
