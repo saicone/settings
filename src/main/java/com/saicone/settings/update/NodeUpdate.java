@@ -224,7 +224,7 @@ public class NodeUpdate {
                     if (node.getKey() == null) {
                         final String[] path = getPath();
                         if (path != null) {
-                            node.move(path);
+                            node.moveRoot(path);
                         }
                     }
                     return true;
@@ -239,7 +239,7 @@ public class NodeUpdate {
                 final String[] path = getPath();
                 if (path != null) {
                     final boolean result = node.isReal();
-                    node.move(path);
+                    node.moveRoot(path);
                     return result;
                 }
                 break;
