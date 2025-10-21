@@ -19,7 +19,7 @@ allprojects {
     dependencies {
         compileOnly 'org.jetbrains:annotations:26.0.2'
 
-        testImplementation(platform('org.junit:junit-bom:5.13.4'))
+        testImplementation(platform('org.junit:junit-bom:5.14.0'))
         testImplementation('org.junit.jupiter:junit-jupiter')
         testRuntimeOnly('org.junit.platform:junit-platform-launcher')
         testImplementation('com.google.guava:guava:33.5.0-jre')
@@ -62,7 +62,7 @@ subprojects {
 }
 
 dependencies {
-    api 'com.saicone:types:1.4.0'
+    api 'com.saicone:types:1.4.1'
 
     compileOnly 'com.ezylang:EvalEx:3.5.0'
     compileOnly 'com.github.ben-manes.caffeine:caffeine:3.2.2'

@@ -107,10 +107,10 @@ public class TomlSettingsSource implements SettingsSource {
     @Nullable
     @Contract("!null, _ -> !null")
     public <T extends MapNode> T readConfig(@Nullable T parent, @NotNull Config config) {
-        if (config.valueMap().isEmpty()) {
+        if (config.entrySet().isEmpty()) {
             return parent;
         }
-        for (Map.Entry<String, Object> entry : config.valueMap().entrySet()) {
+        for (Config.Entry entry : config.entrySet()) {
             final SettingsNode node = readValue(parent, entry.getKey(), entry.getValue());
             if (config instanceof CommentedConfig) {
                 final String comment = ((CommentedConfig) config).getComment(entry.getKey());
