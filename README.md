@@ -76,12 +76,12 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.saicone.settings:settings:1.0.3'
+    implementation 'com.saicone.settings:settings:1.0.4'
     // Other modules
-    implementation 'com.saicone.settings:settings-gson:1.0.3'
-    implementation 'com.saicone.settings:settings-hocon:1.0.3'
-    implementation 'com.saicone.settings:settings-toml:1.0.3'
-    implementation 'com.saicone.settings:settings-yaml:1.0.3'
+    implementation 'com.saicone.settings:settings-gson:1.0.4'
+    implementation 'com.saicone.settings:settings-hocon:1.0.4'
+    implementation 'com.saicone.settings:settings-toml:1.0.4'
+    implementation 'com.saicone.settings:settings-yaml:1.0.4'
 }
 ```
 
@@ -96,12 +96,12 @@ repositories {
 }
 
 dependencies {
-    implementation("com.saicone.settings:settings:1.0.3")
+    implementation("com.saicone.settings:settings:1.0.4")
     // Other modules
-    implementation("com.saicone.settings:settings-gson:1.0.3")
-    implementation("com.saicone.settings:settings-hocon:1.0.3")
-    implementation("com.saicone.settings:settings-toml:1.0.3")
-    implementation("com.saicone.settings:settings-yaml:1.0.3")
+    implementation("com.saicone.settings:settings-gson:1.0.4")
+    implementation("com.saicone.settings:settings-hocon:1.0.4")
+    implementation("com.saicone.settings:settings-toml:1.0.4")
+    implementation("com.saicone.settings:settings-yaml:1.0.4")
 }
 ```
 
@@ -122,32 +122,32 @@ dependencies {
     <dependency>
         <groupId>com.saicone.settings</groupId>
         <artifactId>settings</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
         <scope>compile</scope>
     </dependency>
     <!-- Other modules -->
     <dependency>
         <groupId>com.saicone.settings</groupId>
         <artifactId>settings-gson</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.saicone.settings</groupId>
         <artifactId>settings-hocon</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.saicone.settings</groupId>
         <artifactId>settings-toml</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.saicone.settings</groupId>
         <artifactId>settings-yaml</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
         <scope>compile</scope>
     </dependency>
 </dependencies>
@@ -172,12 +172,12 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.saicone.settings:settings:1.0.3'
+    implementation 'com.saicone.settings:settings:1.0.4'
     // Other modules
-    implementation 'com.saicone.settings:settings-gson:1.0.3'
-    implementation 'com.saicone.settings:settings-hocon:1.0.3'
-    implementation 'com.saicone.settings:settings-toml:1.0.3'
-    implementation 'com.saicone.settings:settings-yaml:1.0.3'
+    implementation 'com.saicone.settings:settings-gson:1.0.4'
+    implementation 'com.saicone.settings:settings-hocon:1.0.4'
+    implementation 'com.saicone.settings:settings-toml:1.0.4'
+    implementation 'com.saicone.settings:settings-yaml:1.0.4'
 }
 
 jar.dependsOn (shadowJar)
@@ -206,12 +206,12 @@ repositories {
 }
 
 dependencies {
-    implementation("com.saicone.settings:settings:1.0.3")
+    implementation("com.saicone.settings:settings:1.0.4")
     // Other modules
-    implementation("com.saicone.settings:settings-gson:1.0.3")
-    implementation("com.saicone.settings:settings-hocon:1.0.3")
-    implementation("com.saicone.settings:settings-toml:1.0.3")
-    implementation("com.saicone.settings:settings-yaml:1.0.3")
+    implementation("com.saicone.settings:settings-gson:1.0.4")
+    implementation("com.saicone.settings:settings-hocon:1.0.4")
+    implementation("com.saicone.settings:settings-toml:1.0.4")
+    implementation("com.saicone.settings:settings-yaml:1.0.4")
 }
 
 tasks {
@@ -246,32 +246,32 @@ tasks {
     <dependency>
         <groupId>com.saicone.settings</groupId>
         <artifactId>settings</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
         <scope>compile</scope>
     </dependency>
     <!-- Other modules -->
     <dependency>
         <groupId>com.saicone.settings</groupId>
         <artifactId>settings-gson</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.saicone.settings</groupId>
         <artifactId>settings-hocon</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.saicone.settings</groupId>
         <artifactId>settings-toml</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
         <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>com.saicone.settings</groupId>
         <artifactId>settings-yaml</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
         <scope>compile</scope>
     </dependency>
 </dependencies>
