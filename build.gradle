@@ -64,7 +64,7 @@ subprojects {
 dependencies {
     api 'com.saicone:types:1.4.2'
 
-    compileOnly 'com.ezylang:EvalEx:3.5.0'
+    compileOnly 'com.ezylang:EvalEx:3.6.0'
     compileOnly 'com.github.ben-manes.caffeine:caffeine:v3.2.3'
     compileOnly 'com.google.guava:guava:33.5.0-jre'
 }
