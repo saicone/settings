@@ -78,7 +78,7 @@ Settings contains the following artifacts:
 
 ```groovy
 dependencies {
-    implementation 'com.saicone:settings:1.0.5'
+    implementation 'com.saicone:settings:1.0.6'
 }
 ```
 
@@ -89,7 +89,7 @@ dependencies {
 
 ```kotlin
 dependencies {
-    implementation("com.saicone:settings:1.0.5")
+    implementation("com.saicone:settings:1.0.6")
 }
 ```
 
@@ -103,7 +103,7 @@ dependencies {
     <dependency>
         <groupId>com.saicone</groupId>
         <artifactId>settings</artifactId>
-        <version>1.0.5</version>
+        <version>1.0.6</version>
         <scope>compile</scope>
     </dependency>
 </dependencies>
