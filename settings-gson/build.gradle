@@ -1,3 +1,5 @@
+description = 'Settings JSON Gson'
+
 dependencies {
     api 'com.google.code.gson:gson:2.13.2'
 }
@@ -5,16 +7,5 @@ dependencies {
 javadoc {
     options {
         links 'https://javadoc.io/doc/com.google.code.gson/gson/latest/'
-    }
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = project.group
-            artifactId = project.name
-            version = project.version
-            from components.java
-        }
     }
 }
