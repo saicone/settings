@@ -94,7 +94,7 @@ dependencies {
     api 'com.saicone:types:1.4.3'
     api 'com.saicone:types-mapper:1.4.3'
 
-    compileOnly 'com.ezylang:EvalEx:3.6.0'
+    compileOnly 'com.ezylang:EvalEx:3.6.1'
     compileOnly 'com.github.ben-manes.caffeine:caffeine:3.2.3'
     compileOnly 'com.google.guava:guava:33.5.0-jre'
 }
