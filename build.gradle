@@ -98,14 +98,11 @@ tasks.register('allJavadoc', Javadoc) {
     })
 
     options {
-        links 'https://docs.oracle.com/en/java/javase/11/docs/api/'
-        links 'https://javadoc.io/doc/org.jetbrains/annotations/latest/'
-        links 'https://javadoc.io/doc/com.ezylang/EvalEx/latest/'
-        links 'https://javadoc.io/doc/com.google.code.gson/gson/latest/'
-        links 'https://javadoc.io/doc/com.typesafe/config/latest/'
-        links 'https://javadoc.io/doc/com.electronwill.night-config/core/latest/'
-        links 'https://javadoc.io/doc/com.electronwill.night-config/toml/latest/'
-        links 'https://javadoc.io/doc/org.yaml/snakeyaml/latest/'
+        def allLinks = javadocProjects.collect { projectPath ->
+            project(projectPath).javadoc.options.links
+        }.flatten().unique()
+        allLinks.each { link -> links link }
     }
+
     destinationDir = file(project.layout.buildDirectory.dir('docs/all-javadoc'))
 }
