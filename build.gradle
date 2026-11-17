@@ -1,13 +1,6 @@
-
-description = 'Settings'
-
 allprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
-    apply plugin: 'java-library'
-    apply plugin: 'maven-publish'
-
-    apply from: "$rootDir/gradle/publish-config.gradle"
 
     idea {
         module {
@@ -52,61 +45,43 @@ allprojects {
             links 'https://javadoc.io/doc/org.jetbrains/annotations/latest/'
         }
     }
+}
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+
+    apply from: "$rootDir/gradle/publish-config.gradle"
 
     publishing {
         publications {
             maven(MavenPublication) {
                 from components.java
+            }
+        }
+    }
 
-                pom {
-                    afterEvaluate {
-                        description = 'Java library to interpret multiple data formats as flexible configuration'
+    if (project.name != 'settings-api') {
+        dependencies {
+            api project(':settings-api')
+        }
+
+        publishing {
+            publications {
+                maven(MavenPublication) {
+                    pom {
+                        afterEvaluate {
+                            description = "Module \"${project.name}\" of Settings"
+                        }
                     }
                 }
             }
         }
-    }
-}
-
-subprojects {
-    dependencies {
-        implementation rootProject
-    }
-
-    javadoc {
-        source.asList().add(rootProject.sourceSets.main.allJava)
-    }
-
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                pom {
-                    afterEvaluate {
-                        description = "Module \"${project.name}\" of Settings"
-                    }
-                }
-            }
-        }
-    }
-}
-
-dependencies {
-    api 'com.saicone:types:1.4.3'
-    api 'com.saicone:types-mapper:1.4.3'
-
-    compileOnly 'com.ezylang:EvalEx:3.6.0'
-    compileOnly 'com.github.ben-manes.caffeine:caffeine:3.2.3'
-    compileOnly 'com.google.guava:guava:33.5.0-jre'
-}
-
-javadoc {
-    options {
-        links 'https://javadoc.io/doc/com.ezylang/EvalEx/latest/'
     }
 }
 
 def javadocProjects= [
-        ':',
+        ':settings-api',
         ':settings-gson',
         ':settings-hocon',
         ':settings-toml',

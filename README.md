@@ -67,49 +67,45 @@ Settings settings = data.load(folder, true);
 
 Settings contains the following artifacts:
 
-* `settings` - The main project.
+* `settings-api` - The main project.
 * `settings-gson` - JSON loader using [gson](https://github.com/google/gson) library.
 * `settings-hocon` - HOCON loader
 * `settings-toml` - TOML loader
 * `settings-yaml` - YAML laoder
 
-<details>
-  <summary>build.gradle</summary>
-
+build.gradle
 ```groovy
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    implementation 'com.saicone:settings:1.0.6'
+    implementation 'com.saicone:settings-api:1.0.6'
 }
 ```
 
-</details>
-
-<details>
-  <summary>build.gradle.kts</summary>
-
+build.gradle.kts
 ```kotlin
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    implementation("com.saicone:settings:1.0.6")
+    implementation("com.saicone:settings-api:1.0.6")
 }
 ```
 
-</details>
-
-<details>
-  <summary>pom.xml</summary>
-
+pom.xml
 ```xml
 <dependencies>
     <dependency>
         <groupId>com.saicone</groupId>
-        <artifactId>settings</artifactId>
+        <artifactId>settings-api</artifactId>
         <version>1.0.6</version>
         <scope>compile</scope>
     </dependency>
 </dependencies>
 ```
 
-</details>
-
 > [!NOTE]
-> This project use [Types library](https://github.com/saicone/types) to convert data types, if you relocate the package make sure to relocate `com.saicone.types` package as well.
+> This project use [Types library](https://github.com/saicone/types) to convert data types, if you relocate the `com.saicone.settings` package make sure to relocate `com.saicone.types` package as well.
