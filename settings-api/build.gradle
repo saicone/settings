@@ -1,17 +1,17 @@
 description = 'Settings'
 
 dependencies {
-    api 'com.saicone:types:1.4.3'
-    api 'com.saicone:types-mapper:1.4.3'
+    api libs.types.api
+    api libs.types.mapper
 
-    compileOnly 'com.ezylang:EvalEx:3.6.0'
-    compileOnly 'com.github.ben-manes.caffeine:caffeine:3.2.3'
-    compileOnly 'com.google.guava:guava:33.5.0-jre'
+    compileOnly libs.evalex
+    compileOnly libs.caffeine
+    compileOnly libs.guava
 }
 
 javadoc {
     options {
-        links 'https://javadoc.io/doc/com.ezylang/EvalEx/latest/'
+        links "https://javadoc.io/doc/com.ezylang/EvalEx/${libs.versions.evalex.get()}/"
     }
 }
 

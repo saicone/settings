@@ -1,11 +1,11 @@
 description = 'Settings HOCON'
 
 dependencies {
-    api 'com.typesafe:config:1.4.6'
+    api libs.hocon
 }
 
 javadoc {
     options {
-        links 'https://javadoc.io/doc/com.typesafe/config/latest/'
+        links "https://javadoc.io/doc/com.typesafe/config/${libs.versions.hocon.get()}/"
     }
 }

@@ -14,12 +14,12 @@ allprojects {
     }
 
     dependencies {
-        compileOnly 'org.jetbrains:annotations:26.1.0'
+        compileOnly libs.annotations
 
-        testImplementation(platform('org.junit:junit-bom:5.14.2'))
-        testImplementation('org.junit.jupiter:junit-jupiter')
-        testRuntimeOnly('org.junit.platform:junit-platform-launcher')
-        testImplementation('com.google.guava:guava:33.5.0-jre')
+        testImplementation(platform(libs.junit.bom))
+        testImplementation(libs.junit.jupiter)
+        testRuntimeOnly(libs.junit.platform.launcher)
+        testImplementation(libs.guava)
     }
 
     test {
@@ -42,7 +42,7 @@ allprojects {
     javadoc {
         options {
             links 'https://docs.oracle.com/en/java/javase/11/docs/api/'
-            links 'https://javadoc.io/doc/org.jetbrains/annotations/latest/'
+            links "https://javadoc.io/doc/org.jetbrains/annotations/${libs.versions.annotations.get()}/"
         }
     }
 }

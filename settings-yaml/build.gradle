@@ -1,11 +1,11 @@
 description = 'Settings YAML'
 
 dependencies {
-    api 'org.yaml:snakeyaml:2.6'
+    api libs.snakeyaml
 }
 
 javadoc {
     options {
-        links 'https://javadoc.io/doc/org.yaml/snakeyaml/latest/'
+        links "https://javadoc.io/doc/org.yaml/snakeyaml/${libs.versions.snakeyaml.get()}/"
     }
 }
