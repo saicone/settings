@@ -3,6 +3,7 @@ description = 'Settings'
 dependencies {
     api libs.types.api
     api libs.types.mapper
+    api libs.types.wrapper
 
     compileOnly libs.evalex
     compileOnly libs.caffeine

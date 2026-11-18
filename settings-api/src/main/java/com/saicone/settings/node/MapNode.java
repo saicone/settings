@@ -4,6 +4,8 @@ import com.saicone.settings.SettingsNode;
 import com.saicone.settings.util.Strings;
 import com.saicone.types.AnyIterable;
 import com.saicone.types.AnyObject;
+import com.saicone.types.TypeWrapper;
+import com.saicone.types.util.WrappedMap;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.function.BiPredicate;
@@ -584,6 +587,22 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         return map;
     }
 
+    @Override
+    public @NotNull Map<String, Object> asLiteralView() {
+        return new WrappedMap<>(this, TypeWrapper.empty(), NodeKey.WRAPPER) {
+            @Override
+            public boolean containsValue(Object value) {
+                for (Map.Entry<String, SettingsNode> entry : getDelegated().entrySet()) {
+                    if (Objects.equals(entry.getValue().getValue(), value)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        };
+    }
+
     /**
      * Get the current map node as Json formatted text.
      *
@@ -660,6 +679,11 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
     @Nullable
     @Override
     public SettingsNode put(String key, SettingsNode value) {
+        if (value instanceof NodeKey<?>) {
+            final NodeKey<?> nodeKey = (NodeKey<?>) value;
+            nodeKey.setParent(null);
+            nodeKey.setKey(key);
+        }
         value.setParent(this);
         return getValue().put(key, value);
     }

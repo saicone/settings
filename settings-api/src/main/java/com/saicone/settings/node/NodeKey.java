@@ -1,6 +1,7 @@
 package com.saicone.settings.node;
 
 import com.saicone.settings.SettingsNode;
+import com.saicone.types.TypeWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +16,11 @@ import java.util.Objects;
  * @param <V> the value type of the node.
  */
 public class NodeKey<V> extends NodeValue<V> {
+
+    /**
+     * A simple type wrapper that allows to wrap a node into object and vice versa.
+     */
+    public static final TypeWrapper<SettingsNode, Object> WRAPPER = TypeWrapper.of(object -> NodeKey.of(null, null, object), node -> ((SettingsNode) node).asLiteralView());
 
     private MapNode parent;
     private String key;

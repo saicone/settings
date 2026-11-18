@@ -28,3 +28,4 @@ snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 toml = { module = "com.electronwill.night-config:toml", version.ref = "toml" }
 types-api = { module = "com.saicone:types-api", version.ref = "types" }
 types-mapper = { module = "com.saicone:types-mapper", version.ref = "types" }
+types-wrapper = { module = "com.saicone:types-wrapper", version.ref = "types" }

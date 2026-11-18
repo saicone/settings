@@ -1,6 +1,7 @@
 package com.saicone.settings.node;
 
 import com.saicone.settings.SettingsNode;
+import com.saicone.types.util.WrappedList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -129,6 +131,21 @@ public class ListNode extends NodeKey<List<SettingsNode>> implements List<Settin
             list.add(node.asLiteralObject());
         }
         return list;
+    }
+
+    @Override
+    public @NotNull List<Object> asLiteralView() {
+        return new WrappedList<>(this, NodeKey.WRAPPER) {
+            @Override
+            public boolean contains(Object o) {
+                for (SettingsNode node : getUnwrapped()) {
+                    if (Objects.equals(node.getValue(), o)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
     }
 
     @Override

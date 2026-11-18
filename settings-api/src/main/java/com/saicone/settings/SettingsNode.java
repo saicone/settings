@@ -557,16 +557,34 @@ public interface SettingsNode extends AnyObject<Object> {
     }
 
     /**
-     * Get the literal object represented by this node, in other words, if the node is a map of nodes, a map of
-     * objects wil be return, if the node is a list of nodes, a list of objects will be return, otherwise the
-     * value from {@link #getValue()} will be return.<br>
+     * Get the literal object represented by this node.<br>
+     * <br>
+     * If the node is a map of nodes, a map of objects wil be return, if the node is a list of nodes,
+     * a list of objects will be return, otherwise the value from {@link #getValue()} will be return.<br>
      * This is an expensive operation due every child node or list element will be return as it's literal object
      * recursively, so it's not suggested to use this method frequently.
      *
-     * @return the literal object represented by this node.
+     * @see #asLiteralView()
+     *
+     * @return a literal object represented by this node.
      */
     @NotNull
     default Object asLiteralObject() {
+        return getValue();
+    }
+
+    /**
+     * Get a literal view of this node.<br>
+     * <br>
+     * If the node is a structure (map or list), any change made in the literal view will be reflected in the node itself.<br>
+     * Instead of {@link #asLiteralObject()} this method is not an expensive operation.
+     *
+     * @see #asLiteralObject()
+     *
+     * @return a literal view of this node.
+     */
+    @NotNull
+    default Object asLiteralView() {
         return getValue();
     }
 }
