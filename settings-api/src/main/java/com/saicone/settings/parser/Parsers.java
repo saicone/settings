@@ -27,7 +27,7 @@ public class Parsers {
             return node;
         }
         final Map<String, SettingsNode> args = map.getValue();
-        return map.setValue(root.getSplit(map.get("extends").asString(""))).replaceArgs(args);
+        return map.setValue(root.getSplit(map.get("extends").asStringOrElse(""))).replaceArgs(args);
     };
 
     Parsers() {

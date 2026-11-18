@@ -6,11 +6,10 @@ import com.saicone.types.Types;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.Set;
 
 /**
  * Abstract class that represents a node multi-layer value along with comments.<br>
@@ -30,6 +29,7 @@ public abstract class NodeValue<V> implements SettingsNode {
 
     // Parsed value cache
     private transient TypeParser<?> typeParser;
+    private transient TypeParser<?> valueParser;
     private transient Object parsedValue;
 
     /**
@@ -136,43 +136,22 @@ public abstract class NodeValue<V> implements SettingsNode {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E> @Nullable E as(@NotNull Class<E> type, @Nullable E def) {
+    public @NotNull <E> E as(@NotNull Class<E> type) {
         if (type.isInstance(this.parsedValue)) {
             return (E) this.parsedValue;
         }
-        final E parsedValue = Types.parse(type, getValue(), def);
-        if (parsedValue != null) {
-            this.parsedValue = parsedValue;
-        }
+        final E parsedValue = SettingsNode.super.as(type);
+        this.parsedValue = parsedValue;
         return parsedValue;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E> @Nullable E as(@NotNull TypeParser<E> parser, @Nullable E def) {
-        if (parser.equals(this.typeParser)) {
+    public @NotNull <E> E as(@NotNull TypeParser<E> parser) {
+        if (parser.equals(this.typeParser) && this.parsedValue != null) {
             return (E) this.parsedValue;
         }
-        final E parsedValue = parser.parse(getValue(), def);
-        if (parsedValue != null) {
-            this.typeParser = parser;
-            this.parsedValue = parsedValue;
-        }
-        return parsedValue;
-    }
-
-    @Override
-    public @NotNull <E> Optional<E> asOptional(@NotNull TypeParser<E> parser) {
-        return Optional.ofNullable(as(parser));
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <E, C extends Collection<E>> @NotNull C asCollection(@NotNull TypeParser<E> parser, @NotNull C collection) {
-        if (parser.equals(this.typeParser) && collection.getClass().isInstance(this.parsedValue)) {
-            return (C) this.parsedValue;
-        }
-        final C parsedValue = parser.collection(collection.getClass(), capacity -> collection).parse(getValue());
+        final E parsedValue = SettingsNode.super.as(parser);
         this.typeParser = parser;
         this.parsedValue = parsedValue;
         return parsedValue;
@@ -180,7 +159,7 @@ public abstract class NodeValue<V> implements SettingsNode {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E extends Enum<E>> @Nullable E asEnum(@NotNull Class<E> type) {
+    public <E extends Enum<E>> @NotNull E asEnum(@NotNull Class<E> type) {
         if (type.isInstance(this.parsedValue)) {
             return (E) this.parsedValue;
         }
@@ -191,18 +170,67 @@ public abstract class NodeValue<V> implements SettingsNode {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E extends Enum<E>> @Nullable E asEnum(@NotNull Class<E> type, @NotNull E[] values) {
-        if (type.isInstance(this.parsedValue)) {
-            return (E) this.parsedValue;
+    public @NotNull <C, A> A asArray(@NotNull Class<C> component) {
+        if (this.parsedValue != null && this.parsedValue.getClass().isArray() && component.isInstance(this.parsedValue.getClass().getComponentType())) {
+            return (A) this.parsedValue;
         }
-        final E parsedValue = SettingsNode.super.asEnum(type, values);
+        final A parsedValue = SettingsNode.super.asArray(component);
+        this.parsedValue = parsedValue;
+        return parsedValue;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public @NotNull <C, A> A asArray(@NotNull TypeParser<C> parser) {
+        if (parser.equals(this.typeParser) && this.parsedValue != null && this.parsedValue.getClass().isArray()) {
+            return (A) this.parsedValue;
+        }
+        final A parsedValue = SettingsNode.super.asArray(parser);
+        this.typeParser = parser;
+        this.parsedValue = parsedValue;
+        return parsedValue;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public @NotNull <E> List<E> asList(@NotNull TypeParser<E> parser) {
+        if (parser.equals(this.typeParser) && this.parsedValue instanceof List) {
+            return (List<E>) this.parsedValue;
+        }
+        final List<E> parsedValue = SettingsNode.super.asList(parser);
+        this.typeParser = parser;
+        this.parsedValue = parsedValue;
+        return parsedValue;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public @NotNull <E> Set<E> asSet(@NotNull TypeParser<E> parser) {
+        if (parser.equals(this.typeParser) && this.parsedValue instanceof Set) {
+            return (Set<E>) this.parsedValue;
+        }
+        final Set<E> parsedValue = SettingsNode.super.asSet(parser);
+        this.typeParser = parser;
+        this.parsedValue = parsedValue;
+        return parsedValue;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public @NotNull <K, v, M extends Map<K, v>> M asMap(@NotNull TypeParser<K> keyParser, @NotNull TypeParser<v> valueParser) {
+        if (keyParser.equals(this.typeParser) && valueParser.equals(this.valueParser) && this.parsedValue instanceof Map) {
+            return (M) this.parsedValue;
+        }
+        final M parsedValue = SettingsNode.super.asMap(keyParser, valueParser);
+        this.typeParser = keyParser;
+        this.valueParser = valueParser;
         this.parsedValue = parsedValue;
         return parsedValue;
     }
 
     @Override
     public String toString() {
-        return Types.STRING.parse(getValue(), "null");
+        return Types.STRING.parseOrElse(getValue(), "null");
     }
 
     @Override

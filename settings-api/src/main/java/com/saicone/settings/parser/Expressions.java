@@ -63,7 +63,7 @@ public class Expressions {
     /**
      * Expression to split a node value from path.
      */
-    public static final ExpressionParser SPLIT = (root, provider, args) -> root.getSplit(args[0]).asString("").split(String.valueOf(args[1]));
+    public static final ExpressionParser SPLIT = (root, provider, args) -> root.getSplit(args[0]).asStringOrElse("").split(String.valueOf(args[1]));
     /**
      * Expression to calculate a mathematical operation.<br>
      * EvalEx library must be in the current classpath.

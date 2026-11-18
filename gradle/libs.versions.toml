@@ -3,15 +3,15 @@ metadata.format.version = "1.1"
 [versions]
 
 annotations = "26.1.0"
-caffeine = "3.2.3"
-evalex = "3.6.0"
-gson = "2.13.2"
-guava = "33.5.0-jre"
-hocon = "1.4.6"
-junit = "5.14.2"
-snakeyaml = "2.6"
-toml = "3.8.3"
-types = "1.4.3"
+caffeine = "3.3.1"
+evalex = "3.8.0"
+gson = "2.15.0"
+guava = "33.8.0-jre"
+hocon = "1.4.10"
+junit = "5.14.4"
+snakeyaml = "2.7"
+toml = "3.9.0"
+types = "1.5.0"
 
 [libraries]
 
@@ -26,5 +26,5 @@ junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 toml = { module = "com.electronwill.night-config:toml", version.ref = "toml" }
-types-api = { module = "com.saicone:types", version.ref = "types" }
+types-api = { module = "com.saicone:types-api", version.ref = "types" }
 types-mapper = { module = "com.saicone:types-mapper", version.ref = "types" }
