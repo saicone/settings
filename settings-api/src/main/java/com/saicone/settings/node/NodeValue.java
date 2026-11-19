@@ -6,6 +6,8 @@ import com.saicone.types.Types;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -226,6 +228,77 @@ public abstract class NodeValue<V> implements SettingsNode {
         this.valueParser = valueParser;
         this.parsedValue = parsedValue;
         return parsedValue;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public @NotNull NodeValue<V> clone() {
+        final NodeValue<V> node;
+        try {
+            node = (NodeValue<V>) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new IllegalStateException(e);
+        }
+
+        node.typeParser = null;
+        node.valueParser = null;
+        node.parsedValue = null;
+
+        if (this.faceValue instanceof Cloneable) {
+            node.faceValue = clone((Cloneable) this.faceValue);
+        }
+        if (this.sourceValue instanceof Cloneable) {
+            node.sourceValue = clone((Cloneable) this.sourceValue);
+        }
+
+        if (this.topComment != null) {
+            node.topComment = new ArrayList<>(this.topComment);
+        }
+        if (this.sideComment != null) {
+            node.sideComment = new ArrayList<>(this.sideComment);
+        }
+
+        return node;
+    }
+
+    @NotNull
+    @SuppressWarnings("unchecked")
+    private static <T extends Cloneable> T clone(@NotNull T object) {
+        try {
+            final Method method = object.getClass().getDeclaredMethod("clone");
+            return (T) method.invoke(object);
+        } catch (Throwable t) {
+            return object;
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public @NotNull NodeValue<V> shallowClone() {
+        return (NodeValue<V>) SettingsNode.super.shallowClone();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public @NotNull NodeValue<V> shallowClone(boolean parent) {
+        return (NodeValue<V>) SettingsNode.super.shallowClone(parent);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public @NotNull NodeValue<V> shallowClone(boolean parent, boolean key) {
+        final NodeValue<V> node;
+        try {
+            node = (NodeValue<V>) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new IllegalStateException(e);
+        }
+
+        node.typeParser = null;
+        node.valueParser = null;
+        node.parsedValue = null;
+
+        return node;
     }
 
     @Override

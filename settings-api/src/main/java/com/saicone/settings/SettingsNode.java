@@ -22,7 +22,7 @@ import java.util.function.Predicate;
  *
  * @author Rubenicos
  */
-public interface SettingsNode extends AnyObject<Object> {
+public interface SettingsNode extends AnyObject<Object>, Cloneable {
 
     /**
      * Check if the current node is not a map or list.
@@ -494,35 +494,50 @@ public interface SettingsNode extends AnyObject<Object> {
     }
 
     /**
-     * Copy this node into new one and return the clone itself.
+     * Create a deep clone of this node.<br>
+     * This method DO NOT conserve any parent node reference since
+     * a clone is not supposed to maintain any relation with the original node.
      *
-     * @return       a clone of this node.
+     * @return a clone of this node.
      */
     @NotNull
-    default SettingsNode copy() {
-        return copy(false);
+    default SettingsNode clone() {
+        throw new IllegalStateException("The clone method is not implemented");
     }
 
     /**
-     * Copy this node into new one and return the clone itself.
+     * Create a superficial clone of this node.<br>
+     * This mean any reference to the value will be copied, not the value itself.
+     *
+     * @return a shallow clone of this node.
+     */
+    @NotNull
+    default SettingsNode shallowClone() {
+        return shallowClone(false);
+    }
+
+    /**
+     * Create a superficial clone of this node.<br>
+     * This mean any reference to the value will be copied, not the value itself.
      *
      * @param parent true to save parent information.
-     * @return       a clone of this node.
+     * @return       a shallow clone of this node.
      */
     @NotNull
-    default SettingsNode copy(boolean parent) {
-        return copy(parent, true);
+    default SettingsNode shallowClone(boolean parent) {
+        return shallowClone(parent, true);
     }
 
     /**
-     * Copy this node into new one and return the clone itself.
+     * Create a superficial clone of this node.<br>
+     * This mean any reference to the value will be copied, not the value itself.
      *
      * @param parent true to save parent information.
      * @param key    true to save key information.
-     * @return       a clone of this node.
+     * @return       a shallow clone of this node.
      */
     @NotNull
-    default SettingsNode copy(boolean parent, boolean key) {
+    default SettingsNode shallowClone(boolean parent, boolean key) {
         return NodeKey.of(parent ? getParent() : null, key ? getKey() : null, this);
     }
 

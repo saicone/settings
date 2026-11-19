@@ -22,7 +22,7 @@ public class NodeKey<V> extends NodeValue<V> {
      */
     public static final TypeWrapper<SettingsNode, Object> WRAPPER = TypeWrapper.of(object -> NodeKey.of(null, null, object), node -> ((SettingsNode) node).asLiteralView());
 
-    private MapNode parent;
+    private transient MapNode parent;
     private String key;
 
     /**
@@ -103,5 +103,38 @@ public class NodeKey<V> extends NodeValue<V> {
         }
         this.key = key;
         return this;
+    }
+
+    @Override
+    public @NotNull NodeKey<V> clone() {
+        final NodeKey<V> node = (NodeKey<V>) super.clone();
+
+        node.parent = null;
+
+        return node;
+    }
+
+    @Override
+    public @NotNull NodeKey<V> shallowClone() {
+        return (NodeKey<V>) super.shallowClone();
+    }
+
+    @Override
+    public @NotNull NodeKey<V> shallowClone(boolean parent) {
+        return (NodeKey<V>) super.shallowClone(parent);
+    }
+
+    @Override
+    public @NotNull NodeKey<V> shallowClone(boolean parent, boolean key) {
+        final NodeKey<V> node = (NodeKey<V>) super.shallowClone(parent, key);
+
+        if (!parent) {
+            node.parent = null;
+        }
+        if (!key) {
+            node.key = null;
+        }
+
+        return node;
     }
 }

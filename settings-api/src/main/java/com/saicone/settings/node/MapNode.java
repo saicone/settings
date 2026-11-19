@@ -649,6 +649,26 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
         }
     }
 
+    @Override
+    public @NotNull MapNode clone() {
+        return (MapNode) super.clone();
+    }
+
+    @Override
+    public @NotNull MapNode shallowClone() {
+        return (MapNode) super.shallowClone();
+    }
+
+    @Override
+    public @NotNull MapNode shallowClone(boolean parent) {
+        return (MapNode) super.shallowClone(parent);
+    }
+
+    @Override
+    public @NotNull MapNode shallowClone(boolean parent, boolean key) {
+        return (MapNode) super.shallowClone(parent, key);
+    }
+
     // Default map implementation
 
     @Override

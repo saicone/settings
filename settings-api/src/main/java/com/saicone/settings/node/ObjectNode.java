@@ -71,4 +71,24 @@ public class ObjectNode extends NodeKey<Object> implements AnyIterable<Object> {
         }
         return node.setKey(getKey());
     }
+
+    @Override
+    public @NotNull ObjectNode clone() {
+        return (ObjectNode) super.clone();
+    }
+
+    @Override
+    public @NotNull ObjectNode shallowClone() {
+        return (ObjectNode) super.shallowClone();
+    }
+
+    @Override
+    public @NotNull ObjectNode shallowClone(boolean parent) {
+        return (ObjectNode) super.shallowClone(parent);
+    }
+
+    @Override
+    public @NotNull ObjectNode shallowClone(boolean parent, boolean key) {
+        return (ObjectNode) super.shallowClone(parent, key);
+    }
 }

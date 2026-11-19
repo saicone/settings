@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  */
 public class Settings extends MapNode {
 
-    private SettingsMemory memory;
+    private transient SettingsMemory memory;
 
     /**
      * Constructs an empty settings object.<br>
@@ -188,5 +188,33 @@ public class Settings extends MapNode {
         if (isMemorizing()) {
             memory.clear();
         }
+    }
+
+    @Override
+    public @NotNull Settings clone() {
+        final Settings settings = (Settings) super.clone();
+
+        settings.memory = null;
+
+        return settings;
+    }
+
+    @Override
+    public @NotNull Settings shallowClone() {
+        return (Settings) super.shallowClone();
+    }
+
+    @Override
+    public @NotNull Settings shallowClone(boolean parent) {
+        return (Settings) super.shallowClone(parent);
+    }
+
+    @Override
+    public @NotNull Settings shallowClone(boolean parent, boolean key) {
+        final Settings settings = (Settings) super.shallowClone(parent, key);
+
+        settings.memory = null;
+
+        return settings;
     }
 }

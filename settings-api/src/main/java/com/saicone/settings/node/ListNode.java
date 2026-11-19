@@ -149,6 +149,26 @@ public class ListNode extends NodeKey<List<SettingsNode>> implements List<Settin
     }
 
     @Override
+    public @NotNull ListNode clone() {
+        return (ListNode) super.clone();
+    }
+
+    @Override
+    public @NotNull ListNode shallowClone() {
+        return (ListNode) super.shallowClone();
+    }
+
+    @Override
+    public @NotNull ListNode shallowClone(boolean parent) {
+        return (ListNode) super.shallowClone(parent);
+    }
+
+    @Override
+    public @NotNull ListNode shallowClone(boolean parent, boolean key) {
+        return (ListNode) super.shallowClone(parent, key);
+    }
+
+    @Override
     public String toString() {
         return getValue().stream().map(Object::toString).collect(Collectors.joining("\n"));
     }
