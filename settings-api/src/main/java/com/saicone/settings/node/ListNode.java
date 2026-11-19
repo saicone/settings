@@ -150,7 +150,17 @@ public class ListNode extends NodeKey<List<SettingsNode>> implements List<Settin
 
     @Override
     public @NotNull ListNode clone() {
-        return (ListNode) super.clone();
+        final ListNode node = (ListNode) super.clone();
+
+        if (node.sourceValue != null) {
+            final List<SettingsNode> value = new ArrayList<>();
+            for (SettingsNode element : node.getValue()) {
+                value.add(element.clone());
+            }
+            node.sourceValue = value;
+        }
+
+        return node;
     }
 
     @Override

@@ -651,7 +651,17 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
 
     @Override
     public @NotNull MapNode clone() {
-        return (MapNode) super.clone();
+        final MapNode node = (MapNode) super.clone();
+
+        if (node.sourceValue != null) {
+            final Map<String, SettingsNode> value = new LinkedHashMap<>();
+            for (Entry<String, SettingsNode> entry : node.getValue().entrySet()) {
+                value.put(entry.getKey(), entry.getValue().clone());
+            }
+            node.sourceValue = value;
+        }
+
+        return node;
     }
 
     @Override

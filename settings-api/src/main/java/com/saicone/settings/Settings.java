@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  */
 public class Settings extends MapNode {
 
-    private transient SettingsMemory memory;
+    protected transient SettingsMemory memory;
 
     /**
      * Constructs an empty settings object.<br>

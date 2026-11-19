@@ -6,7 +6,6 @@ import com.saicone.types.Types;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,11 +22,23 @@ import java.util.Set;
  */
 public abstract class NodeValue<V> implements SettingsNode {
 
-    private Object faceValue;
-    private Object sourceValue;
+    /**
+     * The facing value of this node.
+     */
+    protected Object faceValue;
+    /**
+     * The source value of this node, usually the original value.
+     */
+    protected Object sourceValue;
 
-    private List<String> topComment;
-    private List<String> sideComment;
+    /**
+     * The top comment of the node.
+     */
+    protected List<String> topComment;
+    /**
+     * The side comment of the node.
+     */
+    protected List<String> sideComment;
 
     // Parsed value cache
     private transient TypeParser<?> typeParser;
@@ -240,15 +251,11 @@ public abstract class NodeValue<V> implements SettingsNode {
             throw new IllegalStateException(e);
         }
 
-        node.typeParser = null;
-        node.valueParser = null;
-        node.parsedValue = null;
-
-        if (this.faceValue instanceof Cloneable) {
-            node.faceValue = clone((Cloneable) this.faceValue);
-        }
-        if (this.sourceValue instanceof Cloneable) {
-            node.sourceValue = clone((Cloneable) this.sourceValue);
+        node.faceValue = null;
+        if (this.faceValue != null) {
+            node.sourceValue = this.faceValue;
+        } else {
+            node.sourceValue = this.sourceValue;
         }
 
         if (this.topComment != null) {
@@ -258,18 +265,11 @@ public abstract class NodeValue<V> implements SettingsNode {
             node.sideComment = new ArrayList<>(this.sideComment);
         }
 
-        return node;
-    }
+        node.typeParser = null;
+        node.valueParser = null;
+        node.parsedValue = null;
 
-    @NotNull
-    @SuppressWarnings("unchecked")
-    private static <T extends Cloneable> T clone(@NotNull T object) {
-        try {
-            final Method method = object.getClass().getDeclaredMethod("clone");
-            return (T) method.invoke(object);
-        } catch (Throwable t) {
-            return object;
-        }
+        return node;
     }
 
     @Override

@@ -22,8 +22,14 @@ public class NodeKey<V> extends NodeValue<V> {
      */
     public static final TypeWrapper<SettingsNode, Object> WRAPPER = TypeWrapper.of(object -> NodeKey.of(null, null, object), node -> ((SettingsNode) node).asLiteralView());
 
-    private transient MapNode parent;
-    private String key;
+    /**
+     * The parent node that contains this node key.
+     */
+    protected transient MapNode parent;
+    /**
+     * The key that identifies this node inside the parent.
+     */
+    protected String key;
 
     /**
      * Create a node key with the given parameters.
