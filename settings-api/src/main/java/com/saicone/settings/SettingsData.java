@@ -277,7 +277,7 @@ public class SettingsData<T extends SettingsNode> {
     @NotNull
     @Contract("_, _ -> this")
     public SettingsData<T> or(@NotNull DataType dataType, @NotNull String path) {
-        return or(new SettingsData<>(dataType, path, nodeSupplier));
+        return or(of(dataType, path, nodeSupplier));
     }
 
     /**
