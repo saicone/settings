@@ -47,6 +47,19 @@ public class NodeParserTest {
     }
 
     @Test
+    public void testArgsOutOfBounds() {
+        MapNode node = new MapNode();
+        node.child("key1", "{5}");
+        node.child("key2", ImmutableList.of("{7}", "kept"));
+
+        node.replaceArgs("a", "b");
+
+        assertEquals("{5}", node.get("key1").getValue());
+        assertEquals("{7}", node.get("key2").asListNode().get(0).getValue());
+        assertEquals("kept", node.get("key2").asListNode().get(1).getValue());
+    }
+
+    @Test
     public void testSimpleParser() {
         MapNode expected = new MapNode();
         expected.child("key1", "test: {0}");

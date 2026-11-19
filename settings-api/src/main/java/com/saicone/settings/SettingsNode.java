@@ -381,7 +381,10 @@ public interface SettingsNode extends AnyObject<Object>, Cloneable {
                     num += chars[i] - '0';
                 }
                 if (i + 2 == chars.length) {
-                    return args[num] == null ? node.delete() : node.setValue(args[num]);
+                    if (num < args.length) {
+                        return args[num] == null ? node.delete() : node.setValue(args[num]);
+                    }
+                    return node;
                 }
             }
 
