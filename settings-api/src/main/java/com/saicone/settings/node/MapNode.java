@@ -725,7 +725,9 @@ public class MapNode extends NodeKey<Map<String, SettingsNode>> implements Map<S
 
     @Override
     public void putAll(@NotNull Map<? extends String, ? extends SettingsNode> m) {
-        getValue().putAll(m);
+        for (Entry<? extends String, ? extends SettingsNode> entry : m.entrySet()) {
+            put(entry.getKey(), entry.getValue());
+        }
     }
 
     @Override
