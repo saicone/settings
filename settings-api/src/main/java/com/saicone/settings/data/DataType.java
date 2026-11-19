@@ -7,7 +7,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Data types to load from.
+ * Data types to load from.<br>
+ * <br>
+ * A data type is a marker to identify how the data will be loaded or
+ * can be written into, depending on its nature.
  *
  * @author Rubenicos
  */
@@ -42,7 +45,7 @@ public enum DataType {
     /**
      * Check if data type allows to write data into.
      *
-     * @return true if data type is writeable.
+     * @return true if data type is writeable
      */
     public boolean isWriteable() {
         return writeable;
@@ -51,7 +54,7 @@ public enum DataType {
     /**
      * Check if data is a type of file.
      *
-     * @return true if data type is a file.
+     * @return true if data type is a file
      */
     public boolean isFile() {
         return this == FILE || this == FILE_RESOURCE;
@@ -60,7 +63,7 @@ public enum DataType {
     /**
      * Get data type aliases.
      *
-     * @return a set of string aliases.
+     * @return a set of string aliases
      */
     @NotNull
     public Set<String> getAliases() {
@@ -70,8 +73,8 @@ public enum DataType {
     /**
      * Get data type from given string by finding any header.
      *
-     * @param s the string to analyze.
-     * @return  a data type.
+     * @param s the string to analyze
+     * @return  a data type, or file by default
      */
     @NotNull
     public static DataType of(@NotNull String s) {

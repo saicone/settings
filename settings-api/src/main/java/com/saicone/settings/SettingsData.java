@@ -13,6 +13,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,25 +21,213 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.function.Supplier;
 
 /**
- * Class to load any settings node from data.
+ * Core class to load any settings node from data.<br>
+ * <br>
+ * This is a class that unifies a {@link SettingsSource} as data reader and
+ * a node constructor to load the data into it.
  *
  * @author Rubenicos
  *
- * @param <T> the loadable settings node type.
+ * @param <T> the loadable settings node type
  */
 public class SettingsData<T extends SettingsNode> {
 
+    /**
+     * A constant to represent an unknown path.
+     */
+    public static final String UNKNOWN_PATH = "<unknown>";
+    /**
+     * Default user agent to read from url.
+     */
+    public static final String DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+
+    /**
+     * Create a {@link SettingsData} with a provided data path.<br>
+     * The data type will be resolved using data path format.
+     *
+     * @param dataPath the path to data source
+     * @return         a newly generated settings data
+     */
+    @NotNull
+    public static SettingsData<Settings> of(@NotNull String dataPath) {
+        final DataType dataType = DataType.of(dataPath);
+        String s = dataPath;
+        for (String alias : dataType.getAliases()) {
+            if (s.replace(' ', '_').toLowerCase().startsWith(alias + ':')) {
+                s = s.substring(alias.length() + 1);
+                break;
+            }
+        }
+        return of(dataType, s);
+    }
+
+    /**
+     * Create a {@link SettingsData} with a provided data type and data path.<br>
+     * The data path depends on data type.
+     *
+     * @param dataType the type representing the kind of data source
+     * @param dataPath the path to data source
+     * @return         a newly generated settings data
+     */
+    @NotNull
+    public static SettingsData<Settings> of(@NotNull DataType dataType, @NotNull String dataPath) {
+        return of(dataType, dataPath, Settings::new);
+    }
+
+    /**
+     * Create a {@link SettingsData} with a provided data type, data path and a node constructor.<br>
+     * The data path depends on data type.
+     *
+     * @param dataType     the type representing the kind of data source
+     * @param dataPath     the path to data source
+     * @param nodeSupplier the supplier that provides a settings node to load data into it
+     * @return             a newly generated settings data
+     * @param <T> the loadable settings node type
+     */
+    @NotNull
+    public static <T extends SettingsNode> SettingsData<T> of(@NotNull DataType dataType, @NotNull String dataPath, @NotNull Supplier<T> nodeSupplier) {
+        String format = null;
+
+        final int i = dataPath.lastIndexOf('?');
+        final int index = Math.max(dataPath.lastIndexOf('.'), i);
+        if (index > 0) {
+            format = DataFormat.getFormat(dataPath.substring(index + 1));
+            if (i == index) {
+                dataPath = dataPath.substring(0, i);
+            }
+        }
+
+        final SettingsData<T> data = new SettingsData<>(dataType, dataPath, nodeSupplier);
+        if (format != null) {
+            data.format = format;
+        }
+        return data;
+    }
+
+    /**
+     * Create a {@link SettingsData} using a {@link Path} to load data from.
+     *
+     * @param path the path containing settings data
+     * @return     a newly generated settings data
+     */
+    @NotNull
+    public static SettingsData<Settings> file(@NotNull Path path) {
+        return file(path.toFile(), Settings::new);
+    }
+
+    /**
+     * Create a {@link SettingsData} using a {@link Path} to load data from.
+     *
+     * @param path         the path containing settings data
+     * @param nodeSupplier the supplier that provides a settings node to load data into it
+     * @return             a newly generated settings data
+     * @param <T> the loadable settings node type
+     */
+    @NotNull
+    public static <T extends SettingsNode> SettingsData<T> file(@NotNull Path path, @NotNull Supplier<T> nodeSupplier) {
+        return file(path.toFile(), nodeSupplier);
+    }
+
+    /**
+     * Create a {@link SettingsData} using a {@link File} to load data from.
+     *
+     * @param file the file containing settings data
+     * @return     a newly generated settings data
+     */
+    @NotNull
+    public static SettingsData<Settings> file(@NotNull File file) {
+        return file(file, Settings::new);
+    }
+
+    /**
+     * Create a {@link SettingsData} using a {@link File} to load data from.
+     *
+     * @param file         the file containing settings data
+     * @param nodeSupplier the supplier that provides a settings node to load data into it
+     * @return             a newly generated settings data
+     * @param <T> the loadable settings node type
+     */
+    @NotNull
+    public static <T extends SettingsNode> SettingsData<T> file(@NotNull File file, @NotNull Supplier<T> nodeSupplier) {
+        return new SettingsData<>(DataType.FILE, file.getPath(), nodeSupplier) {
+            @Override
+            public @NotNull File getFile() {
+                return file;
+            }
+        };
+    }
+
+    /**
+     * Create a {@link SettingsData} using a {@link InputStream} to load data from.
+     *
+     * @param input the input stream to load data from
+     * @return      a newly generated settings data
+     */
+    @NotNull
+    public static SettingsData<Settings> stream(@NotNull InputStream input) {
+        return stream(input, Settings::new);
+    }
+
+    /**
+     * Create a {@link SettingsData} using a {@link InputStream} to load data from.
+     *
+     * @param input        the input stream to load data from
+     * @param nodeSupplier the supplier that provides a settings node to load data into it
+     * @return             a newly generated settings data
+     * @param <T> the loadable settings node type
+     */
+    @NotNull
+    public static <T extends SettingsNode> SettingsData<T> stream(@NotNull InputStream input, @NotNull Supplier<T> nodeSupplier) {
+        return new SettingsData<>(DataType.INPUT_STREAM, UNKNOWN_PATH, nodeSupplier) {
+            @Override
+            public @NotNull InputStream getResourceAsStream() {
+                return input;
+            }
+        };
+    }
+
+    /**
+     * Create a {@link SettingsData} using a {@link InputStream} supplier to load data from.
+     *
+     * @param input the input stream to load data from
+     * @return      a newly generated settings data
+     */
+    @NotNull
+    public static SettingsData<Settings> stream(@NotNull Supplier<InputStream> input) {
+        return stream(input, Settings::new);
+    }
+
+    /**
+     * Create a {@link SettingsData} using a {@link InputStream} supplier to load data from.
+     *
+     * @param input        the input stream to load data from
+     * @param nodeSupplier the supplier that provides a settings node to load data into it
+     * @return             a newly generated settings data
+     * @param <T> the loadable settings node type
+     */
+    @NotNull
+    public static <T extends SettingsNode> SettingsData<T> stream(@NotNull Supplier<InputStream> input, @NotNull Supplier<T> nodeSupplier) {
+        return new SettingsData<>(DataType.INPUT_STREAM, UNKNOWN_PATH, nodeSupplier) {
+            @Override
+            public @NotNull InputStream getResourceAsStream() {
+                return input.get();
+            }
+        };
+    }
+
     // Parameters
     private final DataType dataType;
-    private final String path;
+    private final String dataPath;
     private final Supplier<T> nodeSupplier;
 
     // Mutable parameters
@@ -53,64 +242,23 @@ public class SettingsData<T extends SettingsNode> {
     private ClassLoader parentClassLoader;
 
     /**
-     * Create a settings data instance that load {@link Settings} object from provided data path.
-     *
-     * @param path the data path, normally a file path.
-     * @return     a settings data loader.
-     */
-    @NotNull
-    public static SettingsData<Settings> of(@NotNull String path) {
-        final DataType dataType = DataType.of(path);
-        String s = path;
-        for (String alias : dataType.getAliases()) {
-            if (s.replace(' ', '_').toLowerCase().startsWith(alias + ':')) {
-                s = s.substring(alias.length() + 1);
-                break;
-            }
-        }
-        return of(dataType, s);
-    }
-
-    /**
-     * Create a settings data instance that load {@link Settings} object from provided path with data type.
-     *
-     * @param dataType the data type.
-     * @param path     the data path.
-     * @return         a settings data loader.
-     */
-    @NotNull
-    public static SettingsData<Settings> of(@NotNull DataType dataType, @NotNull String path) {
-        return new SettingsData<>(dataType, path, Settings::new);
-    }
-
-    /**
      * Constructs a settings data instance with provided parameters.
      *
-     * @param dataType     the data type.
-     * @param path         the data path.
-     * @param nodeSupplier the supplier to build loadable settings node type.
+     * @param dataType     the type representing the kind of data source
+     * @param dataPath     the path to data source
+     * @param nodeSupplier the supplier that provides a settings node to load data into it
      */
-    public SettingsData(@NotNull DataType dataType, @NotNull String path, @NotNull Supplier<T> nodeSupplier) {
+    public SettingsData(@NotNull DataType dataType, @NotNull String dataPath, @NotNull Supplier<T> nodeSupplier) {
         this.dataType = dataType;
+        this.dataPath = dataPath;
         this.nodeSupplier = nodeSupplier;
-
-        final int i = path.lastIndexOf('?');
-        final int index = Math.max(path.lastIndexOf('.'), i);
-        if (index > 0) {
-            this.format = DataFormat.getFormat(path.substring(index + 1));
-            if (i == index) {
-                this.path = path.substring(0, i);
-                return;
-            }
-        }
-        this.path = path;
     }
 
     /**
      * Set the optional settings data instance to provide a node in case this data path doesn't exist.
      *
-     * @param optional the optional settings data.
-     * @return         this settings data instance.
+     * @param optional the optional settings data
+     * @return         this settings data instance
      */
     @NotNull
     @Contract("_ -> this")
@@ -122,9 +270,9 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Set the optional settings data to provide a node in case this data path doesn't exist.
      *
-     * @param dataType the data type.
-     * @param path     the data path.
-     * @return         this settings data instance.
+     * @param dataType the data type
+     * @param path     the data path
+     * @return         this settings data instance
      */
     @NotNull
     @Contract("_, _ -> this")
@@ -135,8 +283,8 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Set the settings source that will be used to read or write any settings data.
      *
-     * @param source the settings source to read and write data.
-     * @return       this settings data instance.
+     * @param source the settings source to read and write data
+     * @return       this settings data instance
      */
     @NotNull
     @Contract("_ -> this")
@@ -148,8 +296,8 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Set the loaded settings node from data.
      *
-     * @param loaded the current settings node.
-     * @return       this settings data instance.
+     * @param loaded the current settings node
+     * @return       this settings data instance
      */
     @NotNull
     @Contract("_ -> this")
@@ -161,8 +309,8 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Set the optional supply state in this class.
      *
-     * @param optionalSupply true to save optional data in the current data path.
-     * @return               this settings data instance.
+     * @param optionalSupply true to save optional data in the current data path
+     * @return               this settings data instance
      */
     @NotNull
     @Contract("_ -> this")
@@ -174,8 +322,8 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Set the parent folder to load this data from.
      *
-     * @param parentFolder the parent folder.
-     * @return             this settings data instance.
+     * @param parentFolder the parent folder
+     * @return             this settings data instance
      */
     @NotNull
     @Contract("_ -> this")
@@ -187,8 +335,8 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Set the parent class loader to load this data from.
      *
-     * @param parentClassLoader the parent class loader.
-     * @return                  this settings data instance.
+     * @param parentClassLoader the parent class loader
+     * @return                  this settings data instance
      */
     @NotNull
     @Contract("_ -> this")
@@ -200,7 +348,7 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Get the type this data come from.
      *
-     * @return a data type.
+     * @return a data type
      */
     @NotNull
     public DataType getDataType() {
@@ -210,17 +358,17 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Get the path this data come from.
      *
-     * @return a data path.
+     * @return a data path
      */
     @NotNull
-    public String getPath() {
-        return path;
+    public String getDataPath() {
+        return dataPath;
     }
 
     /**
      * Get the current node supplier that build loadable settings node type.
      *
-     * @return a node type supplier.
+     * @return a node type supplier
      */
     @NotNull
     public Supplier<T> getNodeSupplier() {
@@ -230,7 +378,7 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Get the current data format.
      *
-     * @return a data format type.
+     * @return a data format type
      */
     @Nullable
     public String getFormat() {
@@ -240,7 +388,7 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Get the current optional settings data.
      *
-     * @return a optional settings data if is set, null otherwise.
+     * @return a optional settings data if is set, null otherwise
      */
     @Nullable
     public SettingsData<T> getOptional() {
@@ -250,7 +398,7 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Get the optional loaded settings node instance.
      *
-     * @return an optional settings node if is loaded, null otherwise.
+     * @return an optional settings node if is loaded, null otherwise
      */
     @Nullable
     public T getOptionalLoaded() {
@@ -260,7 +408,7 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Get the current settings source of load a new one.
      *
-     * @return a settings source instance.
+     * @return a settings source instance
      */
     @NotNull
     public SettingsSource getSource() {
@@ -273,7 +421,7 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Get loaded settings node instance.
      *
-     * @return an settings node.
+     * @return a settings node
      */
     @NotNull
     public T getLoaded() {
@@ -286,33 +434,33 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Get effective settings file using current path and parent folder.
      *
-     * @return a file containing settings node data.
+     * @return a file containing settings node data
      */
     @NotNull
     public File getFile() {
         if (dataType == DataType.FILE_RESOURCE) {
-            return new File(this.getClass().getResource(path).getFile());
+            return new File(this.getClass().getResource(dataPath).getFile());
         }
         File file = parentFolder;
-        for (String s : Strings.split(path, '/')) {
+        for (String s : Strings.split(dataPath, '/')) {
             file = new File(file, s);
         }
         if (file == null) {
-            file = new File(path);
+            file = new File(dataPath);
         }
         // Path marked with recursive search
-        if (!file.exists() && path.endsWith(".*")) {
+        if (!file.exists() && dataPath.endsWith(".*")) {
             file = file.getParentFile();
             // Check if the file type was specified or cached after search
             if (!format.equals("*")) {
-                final File typeFile = new File(file, path.substring(0, path.lastIndexOf('.')) + '.' + format);
+                final File typeFile = new File(file, dataPath.substring(0, dataPath.lastIndexOf('.')) + '.' + format);
                 if (typeFile.exists()) {
                     return typeFile;
                 }
             }
             // Search for format types
             for (String extension : DataFormat.getExtensions()) {
-                final File other = new File(file, path.substring(0, path.lastIndexOf('.')) + '.' + extension);
+                final File other = new File(file, dataPath.substring(0, dataPath.lastIndexOf('.')) + '.' + extension);
                 if (other.exists()) {
                     file = other;
                     // Cache file format
@@ -331,8 +479,8 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Get the nearest file using provided data format.
      *
-     * @param type the data format type.
-     * @return     a file containing settings node data.
+     * @param type the data format type
+     * @return     a file containing settings node data
      */
     @NotNull
     public File getNearestFile(@NotNull String type) {
@@ -347,17 +495,39 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Get effective settings stream using current path and parent class loader.
      *
-     * @return a input stream containing settings node data.
+     * @return a input stream containing settings node data
      */
     @Nullable
-    public InputStream getResourceAsStream() {
-        return (parentClassLoader != null ? parentClassLoader : SettingsData.class.getClassLoader()).getResourceAsStream(path);
+    public InputStream getResourceAsStream() throws IOException {
+        switch (dataType) {
+            case FILE:
+            case FILE_RESOURCE:
+                return new FileInputStream(getFile());
+            case URL:
+                final URLConnection connection = new URL(dataPath).openConnection();
+                connection.addRequestProperty("User-Agent", DEFAULT_USER_AGENT);
+
+                if (connection instanceof HttpURLConnection) {
+                    final HttpURLConnection http = (HttpURLConnection) connection;
+
+                    final int responseCode = http.getResponseCode();
+                    if (responseCode < 200 || responseCode >= 300) {
+                        throw new IOException("HTTP " + responseCode + " while connecting with " + dataPath + " (" + http.getResponseMessage() + ")");
+                    }
+                }
+
+                return connection.getInputStream();
+            case INPUT_STREAM:
+                return (parentClassLoader != null ? parentClassLoader : SettingsData.class.getClassLoader()).getResourceAsStream(dataPath);
+            default:
+                throw new UnsupportedOperationException("Unsupported data type: " + dataType);
+        }
     }
 
     /**
      * Load the current settings data into node.
      *
-     * @return the loaded settings node.
+     * @return the loaded settings node
      */
     @NotNull
     public T load() {
@@ -400,8 +570,8 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Load the current settings data into node.
      *
-     * @param optionalSupply true to save optional data in the current data path.
-     * @return               the loaded settings node.
+     * @param optionalSupply true to save optional data in the current data path
+     * @return               the loaded settings node
      */
     @NotNull
     public T load(boolean optionalSupply) {
@@ -412,8 +582,8 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Load the current settings data into node.
      *
-     * @param parentFolder the parent folder.
-     * @return             the loaded settings node.
+     * @param parentFolder the parent folder
+     * @return             the loaded settings node
      */
     @NotNull
     public T load(@NotNull File parentFolder) {
@@ -424,8 +594,8 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Load the current settings data into node.
      *
-     * @param parentClassLoader the parent class loader.
-     * @return                  the loaded settings node.
+     * @param parentClassLoader the parent class loader
+     * @return                  the loaded settings node
      */
     @NotNull
     public T load(@NotNull ClassLoader parentClassLoader) {
@@ -436,9 +606,9 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Load the current settings data into node.
      *
-     * @param parentFolder   the parent folder.
-     * @param optionalSupply true to save optional data in the current data path.
-     * @return               the loaded settings node.
+     * @param parentFolder   the parent folder
+     * @param optionalSupply true to save optional data in the current data path
+     * @return               the loaded settings node
      */
     @NotNull
     public T load(@NotNull File parentFolder, boolean optionalSupply) {
@@ -449,9 +619,9 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Load the current settings data into node.
      *
-     * @param parentClassLoader the parent class loader.
-     * @param optionalSupply    true to save optional data in the current data path.
-     * @return                  the loaded settings node.
+     * @param parentClassLoader the parent class loader
+     * @param optionalSupply    true to save optional data in the current data path
+     * @return                  the loaded settings node
      */
     @NotNull
     public T load(@NotNull ClassLoader parentClassLoader, boolean optionalSupply) {
@@ -462,8 +632,8 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Create a settings source from provided source type id.
      *
-     * @param type the source type.
-     * @return     a settings source.
+     * @param type the source type
+     * @return     a settings source
      */
     @NotNull
     public SettingsSource loadSource(@NotNull String type) {
@@ -497,8 +667,8 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Save settings data into provider.
      *
-     * @param provider the provider to save data in.
-     * @throws IOException if any error occurs while data is transferred.
+     * @param provider the provider to save data in
+     * @throws IOException if any error occurs while data is transferred
      */
     public void saveInto(@NotNull SettingsData<?> provider) throws IOException {
         if (provider.format.equals("*")) {
@@ -518,10 +688,6 @@ public class SettingsData<T extends SettingsNode> {
                     }
                     return;
                 case URL:
-                    try (InputStream in = new URL(path).openStream()) {
-                        Files.copy(in, toFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    }
-                    return;
                 case INPUT_STREAM:
                     final InputStream in = getResourceAsStream();
                     if (in != null) {
@@ -542,8 +708,8 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Create a reader depending on data type.
      *
-     * @return a reader for the settings data.
-     * @throws IOException if any error occurs on reader creation.
+     * @return a reader for the settings data
+     * @throws IOException if any error occurs on reader creation
      */
     @NotNull
     public Reader createReader() throws IOException {
@@ -556,15 +722,15 @@ public class SettingsData<T extends SettingsNode> {
                 }
                 throw new IOException("Cannot create reader for unknown file");
             case URL:
-                final URLConnection con = new URL(path).openConnection();
-                con.addRequestProperty("User-Agent", "Mozilla/5.0");
-                return new InputStreamReader(new BufferedInputStream(con.getInputStream()));
             case INPUT_STREAM:
-                final InputStream in = getResourceAsStream();
+                InputStream in = getResourceAsStream();
                 if (in != null) {
-                    return new InputStreamReader(new BufferedInputStream(in));
+                    if (!(in instanceof BufferedInputStream)) {
+                        in = new BufferedInputStream(in);
+                    }
+                    return new InputStreamReader(in);
                 }
-                throw new IOException("The path '" + path + "' doesn't exist as resource on parent class loader");
+                throw new IOException("The data path '" + dataPath + "' doesn't exist as resource");
             default:
                 throw new IOException("Cannot create writer for " + dataType.name() + " data type");
         }
@@ -573,8 +739,8 @@ public class SettingsData<T extends SettingsNode> {
     /**
      * Create a writer depending on data type.
      *
-     * @return a writer for the settings data.
-     * @throws IOException if any error occurs on writer creation.
+     * @return a writer for the settings data
+     * @throws IOException if any error occurs on writer creation
      */
     @NotNull
     public Writer createWriter() throws IOException {
