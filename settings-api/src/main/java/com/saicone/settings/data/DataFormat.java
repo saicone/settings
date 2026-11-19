@@ -104,9 +104,9 @@ public class DataFormat {
             throw new IllegalArgumentException("Cannot find SettingsSource for '" + type + "' with format '" + format + "', consider using your own implementation");
         }
         try {
-            return SOURCE_TYPES.get(type).getDeclaredConstructor().newInstance();
+            return SOURCE_TYPES.get(format).getDeclaredConstructor().newInstance();
         } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
-            throw new RuntimeException("Cannot initialize the SettingsSource " + SOURCE_TYPES.get(type).getName() + " with reflection, consider using your own implementation", e);
+            throw new RuntimeException("Cannot initialize the SettingsSource " + SOURCE_TYPES.get(format).getName() + " with reflection, consider using your own implementation", e);
         }
     }
 
