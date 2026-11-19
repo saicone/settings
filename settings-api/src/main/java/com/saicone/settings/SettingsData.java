@@ -539,22 +539,7 @@ public class SettingsData<T extends SettingsNode> {
             loaded.asListNode().clear();
         }
 
-        try {
-            Reader reader;
-            try {
-                reader = createReader();
-            } catch (IOException e) {
-                if (optional == null) {
-                    throw e;
-                }
-                if (optionalSupply) {
-                    optional.saveInto(this);
-                    reader = createReader();
-                } else {
-                    reader = optional.createReader();
-                }
-            }
-
+        try (Reader reader = createReader0()) {
             final MapNode node = getSource().read(reader, loaded.isMap() ? loaded.asMapNode() : new MapNode());
             if (loaded.isList()) {
                 for (Map.Entry<String, SettingsNode> entry : node.getValue().entrySet()) {
@@ -733,6 +718,23 @@ public class SettingsData<T extends SettingsNode> {
                 throw new IOException("The data path '" + dataPath + "' doesn't exist as resource");
             default:
                 throw new IOException("Cannot create writer for " + dataType.name() + " data type");
+        }
+    }
+
+    @NotNull
+    private Reader createReader0() throws IOException {
+        try {
+            return createReader();
+        } catch (IOException e) {
+            if (optional == null) {
+                throw e;
+            }
+            if (optionalSupply) {
+                optional.saveInto(this);
+                return createReader();
+            } else {
+                return optional.createReader();
+            }
         }
     }
 
