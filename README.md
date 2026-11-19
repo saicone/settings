@@ -80,7 +80,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.saicone:settings-api:1.0.6'
+    implementation 'com.saicone:settings-api:1.0.7'
 }
 ```
 
@@ -91,7 +91,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.saicone:settings-api:1.0.6")
+    implementation("com.saicone:settings-api:1.0.7")
 }
 ```
 
@@ -101,7 +101,7 @@ pom.xml
     <dependency>
         <groupId>com.saicone</groupId>
         <artifactId>settings-api</artifactId>
-        <version>1.0.6</version>
+        <version>1.0.7</version>
         <scope>compile</scope>
     </dependency>
 </dependencies>
