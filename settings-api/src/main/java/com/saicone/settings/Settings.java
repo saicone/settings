@@ -120,7 +120,7 @@ public class Settings extends MapNode {
     @Override
     public @NotNull SettingsNode getRegex(@NotNull @Language(value = "RegExp") String... regexPath) {
         if (isMemorizing()) {
-            save("$RegExp." + String.join(".", regexPath), () -> super.getRegex(regexPath));
+            return save("$RegExp." + String.join(".", regexPath), () -> super.getRegex(regexPath));
         }
         return super.getRegex(regexPath);
     }
